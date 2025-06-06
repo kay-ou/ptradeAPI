@@ -1,13 +1,4 @@
-# 帮助
-
-恒生投研平台
-
-*   [首页](/start)
-*   [研究](/home)
-*   [策略](/strategys)
-*   [交易](/trades)
-*   [数据](/data)
-*   [帮助](/help/api)
+# Ptrade API 帮助文档
 
 *   [API文档](#API文档 "API文档")
 *   [使用说明](#使用说明 "使用说明")
