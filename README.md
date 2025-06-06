@@ -1,4 +1,5 @@
 # Ptrade API 帮助文档
+# 帮助
 
 *   [API文档](#API文档 "API文档")
 *   [使用说明](#使用说明 "使用说明")
@@ -197,26 +198,31 @@
 开始回测和交易前需要先新建策略，点击下图中左上角标识进行策略添加。可以选择不同的业务类型（比如股票），然后给策略设定一个名称，添加成功后可以在默认策略模板基础上进行策略编写。
 
 ![](https://converturltomd.com/static/images/help/creat_strategy.png)
+<!-- Image marked for download -->
 
 ## 新建回测
 
 策略添加完成后就可以开始进行回测操作了。回测之前需要对开始时间、结束时间、回测资金、回测基准、回测频率几个要素进行设定，设定完毕后点击保存。然后再点击回测按键，系统就会开始运行回测，回测的评价指标、收益曲线、日志都会在界面中展现。
 
 ![](https://converturltomd.com/static/images/help/backtest_factor.png)
+<!-- Image marked for download -->
 
 ## 新建交易
 
 交易界面点击新增按键进行新增交易操作，策略方案中的对象为所有策略列表中的策略，给本次交易设定名称并点击确定后系统就开始运行交易了。
 
 ![](https://converturltomd.com/static/images/help/creat_trade.png)
+<!-- Image marked for download -->
 
 交易开始运行后，可以实时看到总资产和可用资金情况，同时可以在交易列表查询交易状态。
 
 ![](https://converturltomd.com/static/images/help/account_info.png)
+<!-- Image marked for download -->
 
 交易开始运行后，可以点击交易详情，查看策略评价指标、交易明细、持仓明细、交易日志。
 
 ![](https://converturltomd.com/static/images/help/trade_info.png)
+<!-- Image marked for download -->
 
 ## 策略运行周期
 
@@ -471,6 +477,7 @@ ptrade还支持委托主推事件（on\_order\_response）、交易主推事件�
 除了以上的一些事件以外，ptrade也支持通过定时任务来运行策略逻辑，可以通过run\_daily接口实现。
 
 ![](https://converturltomd.com/static/images/help/BizFrame.png)
+<!-- Image marked for download -->
 
 ### initialize（必选）
 
@@ -4251,6 +4258,7 @@ total\_liability
 2.按年份查询模式（start\_year/end\_year参数模式）返回数据类型为pandas.Panel类型，索引为股票代码，其中包含的DataFrame索引为返回股票对应会计日期（end\_date），如get\_fundamentals(\['600000.SS', '600570.SS', '000002.SZ'\], 'balance\_statement', start\_year='2016', end\_year='2016')将返回：
 
 ![](https://converturltomd.com/static/images/help/get_fundamentals_1.png)
+<!-- Image marked for download -->
 
 ### 示例
 
@@ -8978,689 +8986,123 @@ def handle_data(context, data):
 
 # 支持的三方库
 
-序号
+| 序号 | 软件名称              | 版本号    |
+|------|----------------------|----------|
+| 1    | APScheduler         | 3.3.1    |
+| 2    | arch                | 3.2      |
+| 3    | bcolz               | 1.2.1    |
+| 4    | beautifulsoup4      | 4.6.0    |
+| 5    | bleach              | 1.5.0    |
+| 6    | boto                | 2.43.0   |
+| 7    | Bottleneck          | 1.0.0    |
+| 8    | bz2file             | 0.98     |
+| 9    | cachetools          | 3.1.0    |
+| 10   | click               | 4.0      |
+| 11   | contextlib2         | 0.4.0    |
+| 12   | crypto              | 1.4.1    |
+| 13   | cvxopt              | 1.1.8    |
+| 14   | cx-Oracle           | 8.0.1    |
+| 15   | cycler              | 0.10.0   |
+| 16   | cyordereddict       | 0.2.2    |
+| 17   | Cython              | 0.22.1   |
+| 18   | decorator           | 4.0.10   |
+| 19   | entrypoints         | 0.2.2    |
+| 20   | fastcache           | 1.0.2    |
+| 21   | gensim              | 0.13.3   |
+| 22   | h5py                | 2.6.0    |
+| 23   | hmmlearn            | 0.2.0    |
+| 24   | html5lib            | 0.9999999 |
+| 25   | ipykernel           | 4.5.0    |
+| 26   | ipython             | 5.1.0    |
+| 27   | ipython-genutils    | 0.1.0    |
+| 28   | ipywidgets          | 5.2.2    |
+| 29   | jieba               | 0.38     |
+| 30   | Jinja2              | 2.8      |
+| 31   | jsonpickle          | 1.0      |
+| 32   | jsonschema          | 2.5.1    |
+| 33   | jupyter             | 1.0.0    |
+| 34   | jupyter-client      | 4.4.0    |
+| 35   | jupyter-console     | 5.0.0    |
+| 36   | jupyter-core        | 4.2.0    |
+| 37   | jupyter-kernel-gateway | 1.1.1 |
+| 38   | Keras               | 2.2.4    |
+| 39   | Keras-Applications  | 1.0.8    |
+| 40   | Keras-Preprocessing | 1.1.0    |
+| 41   | line-profiler       | 2.1.2    |
+| 42   | Logbook             | 1.4.3    |
+| 43   | lxml                | 4.5.0    |
+| 44   | Markdown            | 2.2.0    |
+| 45   | MarkupSafe          | 0.23     |
+| 46   | matplotlib          | 1.5.3    |
+| 47   | mistune             | 0.7.3    |
+| 48   | Naked               | 0.1.31   |
+| 49   | nbconvert           | 4.2.0    |
+| 50   | nbformat            | 4.1.0    |
+| 51   | networkx            | 1.9.1    |
+| 52   | nose                | 1.3.6    |
+| 53   | notebook            | 4.2.3    |
+| 54   | numexpr             | 2.6.1    |
+| 55   | numpy               | 1.11.2   |
+| 56   | pandas              | 0.23.4   |
+| 57   | patsy               | 0.4.0    |
+| 58   | pexpect             | 4.2.1    |
+| 59   | pickleshare         | 0.7.4    |
+| 60   | pip                 | 9.0.1    |
+| 61   | pkgconfig           | 1.0.0    |
+| 62   | prompt-toolkit      | 1.0.8    |
+| 63   | protobuf            | 3.3.0    |
+| 64   | ptvsd               | 2.2.0    |
+| 65   | ptyprocess          | 0.5.1    |
+| 66   | PyBrain             | 0.3      |
+| 67   | pycrypto            | 2.6.1    |
+| 68   | Pygments            | 2.1.3    |
+| 69   | PyMySQL             | 0.9.3    |
+| 70   | pyparsing           | 2.1.10   |
+| 71   | python-dateutil     | 2.7.5    |
+| 72   | pytz                | 2015.4   |
+| 73   | PyWavelets          | 0.4.0    |
+| 74   | PyYAML              | 3.13     |
+| 75   | pyzmq               | 16.1.0.dev0 |
+| 76   | qtconsole           | 4.2.1    |
+| 77   | requests            | 2.7.0    |
+| 78   | retrying            | 1.3.3    |
+| 79   | scikit-learn        | 0.18     |
+| 80   | scipy               | 0.18.0   |
+| 81   | seaborn             | 0.7.1    |
+| 82   | setuptools          | 28.7.1   |
+| 83   | setuptools-scm      | 3.1.0    |
+| 84   | shellescape         | 3.4.1    |
+| 85   | simplegeneric       | 0.8.1    |
+| 86   | simplejson          | 3.17.0   |
+| 87   | six                 | 1.10.0   |
+| 88   | sklearn             | 0.0      |
+| 89   | smart-open          | 1.3.5    |
+| 90   | SQLAlchemy          | 1.0.8    |
+| 91   | statsmodels         | 0.10.2   |
+| 92   | TA-Lib              | 0.4.10   |
+| 93   | tables              | 3.3.0    |
+| 94   | tabulate            | 0.7.5    |
+| 95   | tensorflow          | 1.3.0rc1 |
+| 96   | tensorflow-tensorboard | 0.1.2 |
+| 97   | terminado           | 0.6      |
+| 98   | Theano              | 0.8.2    |
+| 99   | toolz               | 0.7.4    |
+| 100  | tornado             | 4.4.2    |
+| 101  | traitlets           | 4.3.1    |
+| 102  | tushare             | 1.2.48   |
+| 103  | tzlocal             | 1.3      |
+| 104  | wcwidth             | 0.1.7    |
+| 105  | Werkzeug            | 0.12.2   |
+| 106  | wheel               | 0.29.0   |
+| 107  | widgetsnbextension  | 1.2.6    |
+| 108  | xcsc-tushare        | 1.0.0    |
+| 109  | xgboost             | 0.6a2    |
+| 110  | xlrd                | 1.1.0    |
+| 111  | xlwt                | 1.3.0    |
+| 112  | zipline             | 0.8.3    |
+| 113  | walrus              | 0.9.3    |
 
-三方库名称
 
-版本号
-
-1
-
-APScheduler
-
-3.3.1
-
-2
-
-arch
-
-3.2
-
-3
-
-bcolz
-
-1.2.1
-
-4
-
-beautifulsoup4
-
-4.6.0
-
-5
-
-bleach
-
-1.5.0
-
-6
-
-boto
-
-2.43.0
-
-7
-
-Bottleneck
-
-1.0.0
-
-8
-
-bz2file
-
-0.98
-
-9
-
-cachetools
-
-3.1.0
-
-10
-
-click
-
-4.0
-
-11
-
-contextlib2
-
-0.4.0
-
-12
-
-crypto
-
-1.4.1
-
-13
-
-cvxopt
-
-1.1.8
-
-14
-
-cx-Oracle
-
-8.0.1
-
-15
-
-cycler
-
-0.10.0
-
-16
-
-cyordereddict
-
-0.2.2
-
-17
-
-Cython
-
-0.22.1
-
-18
-
-decorator
-
-4.0.10
-
-19
-
-entrypoints
-
-0.2.2
-
-20
-
-fastcache
-
-1.0.2
-
-21
-
-gensim
-
-0.13.3
-
-22
-
-h5py
-
-2.6.0
-
-23
-
-hmmlearn
-
-0.2.0
-
-24
-
-html5lib
-
-0.9999999
-
-25
-
-ipykernel
-
-4.5.0
-
-26
-
-ipython
-
-5.1.0
-
-27
-
-ipython-genutils
-
-0.1.0
-
-28
-
-ipywidgets
-
-5.2.2
-
-29
-
-jieba
-
-0.38
-
-30
-
-Jinja2
-
-2.8
-
-31
-
-jsonpickle
-
-1.0
-
-32
-
-jsonschema
-
-2.5.1
-
-33
-
-jupyter
-
-1.0.0
-
-34
-
-jupyter-client
-
-4.4.0
-
-35
-
-jupyter-console
-
-5.0.0
-
-36
-
-jupyter-core
-
-4.2.0
-
-37
-
-jupyter-kernel-gateway
-
-1.1.1
-
-38
-
-Keras
-
-2.2.4
-
-39
-
-Keras-Applications
-
-1.0.8
-
-40
-
-Keras-Preprocessing
-
-1.1.0
-
-41
-
-line-profiler
-
-2.1.2
-
-42
-
-Logbook
-
-1.4.3
-
-43
-
-lxml
-
-4.5.0
-
-44
-
-Markdown
-
-2.2.0
-
-45
-
-MarkupSafe
-
-0.23
-
-46
-
-matplotlib
-
-1.5.3
-
-47
-
-mistune
-
-0.7.3
-
-48
-
-Naked
-
-0.1.31
-
-49
-
-nbconvert
-
-4.2.0
-
-50
-
-nbformat
-
-4.1.0
-
-51
-
-networkx
-
-1.9.1
-
-52
-
-nose
-
-1.3.6
-
-53
-
-notebook
-
-4.2.3
-
-54
-
-numexpr
-
-2.6.1
-
-55
-
-numpy
-
-1.11.2
-
-56
-
-pandas
-
-0.23.4
-
-57
-
-patsy
-
-0.4.0
-
-58
-
-pexpect
-
-4.2.1
-
-59
-
-pickleshare
-
-0.7.4
-
-60
-
-pip
-
-9.0.1
-
-61
-
-pkgconfig
-
-1.0.0
-
-62
-
-prompt-toolkit
-
-1.0.8
-
-63
-
-protobuf
-
-3.3.0
-
-64
-
-ptvsd
-
-2.2.0
-
-65
-
-ptyprocess
-
-0.5.1
-
-66
-
-PyBrain
-
-0.3
-
-67
-
-pycrypto
-
-2.6.1
-
-68
-
-Pygments
-
-2.1.3
-
-69
-
-PyMySQL
-
-0.9.3
-
-70
-
-pyparsing
-
-2.1.10
-
-71
-
-python-dateutil
-
-2.7.5
-
-72
-
-pytz
-
-2015.4
-
-73
-
-PyWavelets
-
-0.4.0
-
-74
-
-PyYAML
-
-3.13
-
-75
-
-pyzmq
-
-16.1.0.dev0
-
-76
-
-qtconsole
-
-4.2.1
-
-77
-
-requests
-
-2.7.0
-
-78
-
-retrying
-
-1.3.3
-
-79
-
-scikit-learn
-
-0.18
-
-80
-
-scipy
-
-0.18.0
-
-81
-
-seaborn
-
-0.7.1
-
-82
-
-setuptools
-
-28.7.1
-
-83
-
-setuptools-scm
-
-3.1.0
-
-84
-
-shellescape
-
-3.4.1
-
-85
-
-simplegeneric
-
-0.8.1
-
-86
-
-simplejson
-
-3.17.0
-
-87
-
-six
-
-1.10.0
-
-88
-
-sklearn
-
-0.0
-
-89
-
-smart-open
-
-1.3.5
-
-90
-
-SQLAlchemy
-
-1.0.8
-
-91
-
-statsmodels
-
-0.10.2
-
-92
-
-TA-Lib
-
-0.4.10
-
-93
-
-tables
-
-3.3.0
-
-94
-
-tabulate
-
-0.7.5
-
-95
-
-tensorflow
-
-1.3.0rc1
-
-96
-
-tensorflow-tensorboard
-
-0.1.2
-
-97
-
-terminado
-
-0.6
-
-98
-
-Theano
-
-0.8.2
-
-99
-
-toolz
-
-0.7.4
-
-100
-
-tornado
-
-4.4.2
-
-101
-
-traitlets
-
-4.3.1
-
-102
-
-tushare
-
-1.2.48
-
-103
-
-tzlocal
-
-1.3
-
-104
-
-wcwidth
-
-0.1.7
-
-105
-
-Werkzeug
-
-0.12.2
-
-106
-
-wheel
-
-0.29.0
-
-107
-
-widgetsnbextension
-
-1.2.6
-
-108
-
-xcsc-tushare
-
-1.0.0
-
-109
-
-xgboost
-
-0.6a2
-
-110
-
-xlrd
-
-1.1.0
-
-111
-
-xlwt
-
-1.3.0
-
-112
-
-zipline
-
-0.8.3
-
-113
-
-walrus
-
-0.9.3
 
 # 接口版本变动
 
