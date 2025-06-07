@@ -1763,7 +1763,7 @@ def handle_data(context, data):
     his = get_history(5, '1d', 'close', security_list=None)
 ```
 
-### set\_benchmark\ -\ 设置基准
+### set\_benchmark\s-\s设置基准
 
 ```python
 set_benchmark(sids)
