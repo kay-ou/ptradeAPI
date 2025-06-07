@@ -1724,7 +1724,7 @@ def handle_data(context, data):
 
 ## 设置函数
 
-### set\_universe-设置股票池
+### set\_universe - 设置股票池
 
 ```python
 set_universe(security_list)
@@ -1763,7 +1763,7 @@ def handle_data(context, data):
     his = get_history(5, '1d', 'close', security_list=None)
 ```
 
-### set\_benchmark-设置基准
+### set\_benchmark - 设置基准
 
 ```python
 set_benchmark(sids)
@@ -1806,7 +1806,7 @@ def handle_data(context, data):
     order('000001.SZ',100)
 ```
 
-### set\_commission-设置佣金费率
+### set\_commission - 设置佣金费率
 
 ```python
 set_commission(commission_ratio=0.0003, min_commission=5.0, type="STOCK")
@@ -1853,7 +1853,7 @@ def handle_data(context, data):
     pass
 ```
 
-### set\_fixed\_slippage-设置固定滑点
+### set\_fixed\_slippage - 设置固定滑点
 
 ```python
 set_fixed_slippage(fixedslippage=0.0)
@@ -1892,7 +1892,7 @@ def handle_data(context, data):
     pass
 ```
 
-### set\_slippage-设置滑点
+### set\_slippage - 设置滑点
 
 ```python
 set_slippage(slippage=0.001)
@@ -1931,7 +1931,7 @@ def handle_data(context, data):
     pass
 ```
 
-### set\_volume\_ratio-设置成交比例
+### set\_volume\_ratio - 设置成交比例
 
 ```python
 set_volume_ratio(volume_ratio=0.25)
@@ -1970,7 +1970,7 @@ def handle_data(context, data):
     pass
 ```
 
-### set\_limit\_mode-设置成交数量限制模式
+### set\_limit\_mode - 设置成交数量限制模式
 
 ```python
 set_limit_mode(limit_mode='LIMIT')
@@ -2136,7 +2136,7 @@ def handle_data(context, data):
 
 ## 定时周期性函数
 
-### run\_daily-按日周期处理
+### run\_daily - 按日周期处理
 
 ```python
 run_daily(context, func, time='9:31')
@@ -2386,7 +2386,7 @@ def handle_data(context, data):
 
 ### 获取市场信息
 
-### get\_market\_list-获取市场列表
+### get\_market\_list - 获取市场列表
 
 ```python
 get_market_list()
@@ -2512,7 +2512,7 @@ YCME
 
 渝川玉石
 
-### get\_market\_detail-获取市场详细信息
+### get\_market\_detail - 获取市场详细信息
 
 ```python
 get_market_detail(finance_mic)
@@ -2567,7 +2567,7 @@ finance\_mic: 市场代码，相关市场编码参考get\_market\_list返回信�
 get_market_detail('XSHG')
 ```
 
-### get\_cb\_list-获取可转债市场代码表
+### get\_cb\_list - 获取可转债市场代码表
 
 ```python
 get_cb_list()
@@ -4124,7 +4124,7 @@ def handle_data(context, data):
     pass
 ```
 
-### get\_fundamentals-获取财务数据
+### get\_fundamentals - 获取财务数据
 
 ```python
 get_fundamentals(security, table, fields=None, date=None, start_year=None, end_year=None, report_types=None, merge_type=None)
@@ -4818,7 +4818,7 @@ def handle_data(context, data):
 
 ## 股票交易函数
 
-### order-按数量买卖
+### order - 按数量买卖
 
 ```python
 order(security, amount, limit_price=None)
@@ -8059,7 +8059,7 @@ def handle_data(context, data):
 
 ## 其他函数
 
-### log-日志记录
+### log - 日志记录
 
 ```python
 log(content)
@@ -8105,7 +8105,7 @@ g.security='600570.SS'
 log.info("Selling %s, amount=%s" % (g.security, 10000)) 
 ```
 
-### is\_trade-业务代码场景判断
+### is\_trade - 业务代码场景判断
 
 ```python
 is_trade()
@@ -8310,7 +8310,7 @@ def handle_data(context, data):
     send_qywx('wwxxxxxxxxxxxxf9', 'hixxxxxxxxxxxxxxxxxxxBX8', '10xxxx3', info='已触发委托买入', toparty='1|2')
 ```
 
-### permission\_test-权限校验
+### permission\_test - 权限校验
 
 ```python
 permission_test(account=None, end_date=None)
@@ -8359,7 +8359,7 @@ def after_trading_end(context, data):
         raise RuntimeError('授权不通过，终止程序，抛出异常')
 ```
 
-### create\_dir-创建文件目录路径
+### create\_dir - 创建文件目录路径
 
 ```python
 create_dir(user_path=None)
@@ -8402,7 +8402,7 @@ def handle_data(context, data):
 
 ## 对象
 
-### g-全局对象
+### g - 全局对象
 
 #### 使用场景
 
@@ -8435,7 +8435,7 @@ def handle_data(context, data):
     log.info(g.flag)
 ```
 
-### Context-上下文对象
+### Context - 上下文对象
 
 #### 使用场景
 
