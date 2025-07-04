@@ -61,9 +61,9 @@
 
 本文档支持多个版本和不同券商的API：
 
-- [当前版本文档](docs/brokers/common/) - 通用API文档
-- [历史版本](docs/versions/) - 查看历史版本文档
-- [券商特定说明](docs/brokers/) - 不同券商的特殊配置
+- [当前版本文档](docs/api-reference/) - 通用API文档
+- [历史版本](docs/versions/) - 查看历史版本文档（预留）
+- [券商特定说明](docs/brokers/) - 不同券商的特殊配置（预留）
 
 ## 📖 文档导航
 
