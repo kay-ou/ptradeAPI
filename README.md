@@ -1,97 +1,137 @@
-# Ptrade API 文档
+# Ptrade API 文档项目
 
-欢迎使用 Ptrade API！这是一个功能强大的量化交易API，支持股票、期货、期权等多种金融产品的程序化交易。
+> **Ptrade量化交易API的完整文档库** - 基于三个主要版本的详细对比分析和使用指南
+
+## 🎯 项目简介
+
+Ptrade是由恒生电子开发的量化交易API平台，被多家券商采用并进行定制化部署。本项目整理了三个主要版本的完整文档，包括：
+
+- **东莞证券版本** (PBOXQT1.0V202202.01.041) - 最新功能版本
+- **国盛证券版本** (PBOXQT1.0V202202.01.016) - 稳定标准版本
+- **社区维护版本** (PBOXQT1.0V202202.00.005) - 社区增强版本
+
+## ✨ 项目特色
+
+### 📊 基于实际API文档的版本对比
+- 通过对比三个版本的真实API文档发现技术差异
+- 详细分析函数调用和返回值的具体差异
+- 提供升级指南和兼容性建议
+
+### 🔍 完整的功能分类和索引
+- 按功能分类整理所有API接口
+- 清晰标注各版本的支持情况
+- 提供完整的策略示例库
+
+### 💡 实用的最佳实践
+- 基于官方QA文档的最佳实践
+- 性能优化和稳定性建议
+- 错误处理和调试技巧
+
+### 📚 丰富的学习资源
+- 从基础到高级的完整策略示例
+- 详细的财务数据API文档
+- 有用链接和学习资源汇总
 
 ## 🚀 快速开始
 
-- [使用说明](docs/getting-started/usage.md) - 了解如何新建策略、回测和交易
-- [快速入门](docs/getting-started/quick-start.md) - 从简单示例开始学习
-- [策略示例](docs/getting-started/examples.md) - 查看完整的策略示例
+### 1. 选择您的版本
+根据您使用的券商环境选择对应版本：
 
-## 📚 API 参考文档
+| 券商 | 版本号 | 特点 | 文档链接 |
+|------|--------|------|----------|
+| **东莞证券** | V041 | 最新功能，完整支持 | [查看文档](docs/versions/) |
+| **国盛证券** | V016 | 稳定可靠，标准功能 | [查看文档](docs/versions/) |
+| **社区维护** | V005 | 学习友好，示例丰富 | [查看文档](docs/versions/) |
 
-### 核心框架
-- [策略引擎框架](docs/api-reference/framework.md) - initialize、handle_data等核心函数
-- [设置函数](docs/api-reference/settings.md) - 股票池、基准、佣金等设置
+### 2. 查看版本差异
+了解不同版本间的具体技术差异：
+- [版本差异详细对比](docs/version-differences.md)
+- [功能对比表](docs/versions/version-comparison-table.md)
 
-### 数据获取
-- [基础信息API](docs/api-reference/basic-info.md) - 交易日、市场信息等
-- [行情数据API](docs/api-reference/market-data.md) - 历史行情、实时数据等
-- [股票信息API](docs/api-reference/stock-info.md) - 股票基础信息、财务数据等
+### 3. 学习策略开发
+从入门指南开始学习：
+- [快速开始](docs/getting-started/)
+- [策略示例](docs/examples.md)
+- [API参考](docs/api-reference/)
 
-### 交易功能
-- [股票交易API](docs/api-reference/stock-trading.md) - 股票买卖、订单管理
-- [融资融券API](docs/api-reference/margin-trading.md) - 融资融券交易
-- [期货交易API](docs/api-reference/futures.md) - 期货交易相关功能
-- [期权交易API](docs/api-reference/options.md) - 期权交易相关功能
+## 📁 文档结构
 
-### 工具函数
-- [技术指标](docs/api-reference/technical-indicators.md) - MACD、KDJ、RSI等技术指标
-- [工具函数](docs/api-reference/utilities.md) - 日志、邮件、权限等工具
-- [对象说明](docs/api-reference/objects.md) - Context、Portfolio、Order等对象
+```
+docs/
+├── getting-started/        # 入门指南
+├── api-reference/         # API参考文档
+├── examples.md           # 策略示例
+├── versions/              # 版本信息和对比
+├── version-differences.md # 版本差异对比
+└── advanced/              # 高级功能
+```
 
-## 🔧 高级功能
+## 🔍 主要发现
 
-- [常见问题](docs/advanced/faq.md) - 常见问题解答
-- [支持的三方库](docs/advanced/supported-libraries.md) - 可用的Python库
-- [版本变动](docs/advanced/version-changes.md) - API版本更新记录
+### 关键技术差异
+通过对比三个版本的实际API文档，我们发现了以下重要差异：
 
-## 📋 支持的业务类型
+#### 1. 委托状态字段类型变化 ⚠️ (最重要)
+```python
+# V005: int类型
+if order.status == 8:
 
-### 回测支持
-- 普通股票买卖（单位：股）
-- 可转债买卖（单位：张，T+0）
-- 融资融券担保品买卖（单位：股）
-- 期货投机类型交易（单位：手，T+0）
-- LOF基金买卖（单位：股）
-- ETF基金买卖（单位：股）
+# V016/V041: str类型
+if order.status == '8':
+```
 
-### 交易支持
-- 普通股票买卖（单位：股）
-- 可转债买卖（T+0）
-- 融资融券交易（单位：股）
-- ETF申赎、套利（单位：份）
-- 国债逆回购（单位：份）
-- 期货投机类型交易（单位：手，T+0）
-- LOF基金买卖（单位：股）
-- ETF基金买卖（单位：股）
-- 期权交易（单位：手）
+#### 2. 版本独有功能
+- **V005独有**: 企业微信推送、资金调拨、邮件设置
+- **V016缺少**: 企业微信、可转债专门接口、融券信息查询
+- **V041最全**: 包含所有新功能和最新字段更新
 
-## 🏢 多版本支持
+#### 3. 技术指标支持
+- **V005**: 需手动计算MACD等指标
+- **V016/V041**: 内置`get_MACD()`, `get_KDJ()`, `get_RSI()`, `get_CCI()`
 
-本文档支持多个版本和不同券商的API：
+## 📖 使用指南
 
-- [当前版本文档](docs/api-reference/) - 通用API文档
-- [历史版本](docs/versions/) - 查看历史版本文档（预留）
-- [券商特定说明](docs/brokers/) - 不同券商的特殊配置（预留）
+### 新手入门
+1. 从 [入门指南](docs/getting-started/) 开始
+2. 查看 [策略示例](docs/strategy-examples/) 学习实践
+3. 参考 [API文档](docs/api-reference/) 了解接口
 
-## 📖 文档导航
+### 开发者
+1. 查看 [API参考文档](docs/api-reference/) 了解完整功能
+2. 学习 [策略示例](docs/examples.md) 掌握实用技巧
+3. 参考 [版本对比](docs/version-differences.md) 处理兼容性
 
-### 按使用场景
-- **新手入门**: [使用说明](docs/getting-started/usage.md) → [快速入门](docs/getting-started/quick-start.md)
-- **API查询**: [API参考文档](#-api-参考文档)
-- **问题解决**: [常见问题](docs/advanced/faq.md)
+### 运维人员
+1. 了解 [版本差异](docs/version-differences.md) 和平台限制
+2. 查看 [高级功能](docs/advanced/) 了解配置和优化
+3. 参考 [常见问题](docs/advanced/faq.md) 解决问题
 
-### 按交易类型
-- **股票交易**: [股票交易API](docs/api-reference/stock-trading.md)
-- **融资融券**: [融资融券API](docs/api-reference/margin-trading.md)
-- **期货交易**: [期货交易API](docs/api-reference/futures.md)
-- **期权交易**: [期权交易API](docs/api-reference/options.md)
+## 📚 学习资源
 
-## 🔄 版本信息
+- [策略示例库](docs/examples.md) - 从基础到高级的完整示例
+- [高级功能](docs/advanced/) - 常见问题、支持库、版本变动
 
-- **当前版本**: v1.0
-- **最后更新**: 2024年
-- **兼容性**: 支持Python 3.6+
+## 🤝 贡献指南
 
-## 📞 技术支持
+本项目基于公开的API文档整理，欢迎贡献：
 
-如果您在使用过程中遇到问题，请：
+1. **发现错误**: 提交Issue报告文档错误
+2. **补充内容**: 提交PR添加新的策略示例或最佳实践
+3. **版本更新**: 帮助更新新版本的API差异
 
-1. 首先查看 [常见问题](docs/advanced/faq.md)
-2. 查阅相关的API文档
-3. 联系技术支持团队
+## ⚠️ 免责声明
+
+- 本项目仅用于学习和研究目的
+- 所有策略示例仅供参考，实盘交易请充分测试
+- 具体API功能以各券商实际部署为准
+- 投资有风险，交易需谨慎
+
+## 📄 许可证
+
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
 
 ---
 
-> **注意**: 本文档结构经过优化，将原来的大文档拆分为多个小文档，提高加载速度和维护效率。所有API功能保持不变。
+> **最后更新**: 2024年
+> **维护状态**: 活跃维护中
+> **文档版本**: 基于三个主要版本的实际API文档整理
