@@ -44,18 +44,22 @@ get_fundamentals(security, table_name, fields=None, date=None,
 
 ### 2. 资产负债表 (balance_statement)
 
-| 版本 | 支持状态 | 核心字段数量 | 数据完整性 |
-|------|----------|-------------|-----------|
-| **V005** | ✅ 支持 | 完整 | 高 |
-| **V016** | ✅ 支持 | 基础 | 中等 |
-| **V041** | ✅ 支持 | 完整 | 最高 |
+| 版本 | 支持状态 | 核心字段数量 | 数据完整性 | 版本差异 |
+|------|----------|-------------|-----------|----------|
+| **V005** | ✅ 支持 | 完整 | 高 | 标准字段 |
+| **V016** | ✅ 支持 | 基础 | 中等 | **缺少V029+新增字段** |
+| **V041** | ✅ 支持 | 完整+ | 最高 | **包含所有最新字段** |
 
 **核心字段**:
-- `total_assets` - 资产总计
-- `total_current_assets` - 流动资产合计
-- `total_non_current_assets` - 非流动资产合计
-- `total_current_liability` - 流动负债合计
-- `total_shareholder_equity` - 所有者权益合计
+- `total_current_assets` - 流动资产合计 ✅ 所有版本
+- `total_non_current_assets` - 非流动资产合计 ✅ 所有版本
+- `total_current_liability` - 流动负债合计 ✅ 所有版本
+- `total_shareholder_equity` - 所有者权益合计 ✅ 所有版本
+
+**V029+版本新增字段** (仅V041支持):
+- `total_assets` - 资产总计 ❌ V016不支持
+- `total_liability` - 负债合计 ❌ V016不支持
+- `total_liability_and_equity` - 负债和股东权益总计 ❌ V016不支持
 
 ### 3. 利润表 (income_statement)
 
@@ -98,19 +102,42 @@ get_fundamentals(security, table_name, fields=None, date=None,
 - **社区增强**: 可能包含社区贡献的额外字段
 - **更新频率**: 社区维护，更新相对较慢
 
-### V016 (国盛证券版本) 特点  
+### V016 (国盛证券版本) 特点
 - **数据完整性**: 中等，支持基础财务数据
-- **字段覆盖**: 标准字段，可能缺少最新字段
+- **字段覆盖**: 标准字段，**缺少V029+版本新增字段**
 - **稳定性**: 高，券商官方维护
 - **兼容性**: 与标准接口完全兼容
+- **⚠️ 财务接口限制**:
+  - 缺少 `total_assets`、`total_liability`、`total_liability_and_equity` 字段
+  - 仍使用 `date_type` 参数（V031后已废弃）
+  - 使用旧版接口名 `get_individual_transcation`（拼写差异）
 
 ### V041 (东莞证券版本) 特点
 - **数据完整性**: 最高，包含最新字段更新
 - **字段类型**: 已优化，数据类型统一
 - **更新频率**: 券商维护，更新及时
 - **功能完整**: 支持所有财务数据表和最新功能
+- **✅ 财务接口优势**:
+  - 支持完整的资产负债表字段（V029+新增）
+  - 使用最新参数规范（废弃 `date_type`）
+  - 使用标准接口名 `get_individual_transaction`
 
-## 🔄 数据类型差异
+## 🔄 财务接口关键差异
+
+### 接口参数差异
+
+| 参数名 | V005 | V016 | V041 | 说明 |
+|--------|------|------|------|------|
+| `date_type` | ✅ 支持 | ✅ 支持 | ❌ V031废弃 | 国盛证券仍使用旧参数 |
+| `table_name` | ✅ 支持 | ✅ 支持 | ✅ 支持 | 所有版本通用 |
+| `fields` | ✅ 支持 | ✅ 支持 | ✅ 支持 | 所有版本通用 |
+
+### 接口命名差异
+
+| 接口功能 | V005 | V016 | V041 | 差异说明 |
+|----------|------|------|------|----------|
+| 逐笔成交 | `get_individual_transaction` | `get_individual_transcation` | `get_individual_transaction` | V016拼写不同 |
+| 财务数据 | `get_fundamentals` | `get_fundamentals` | `get_fundamentals` | 命名一致 |
 
 ### 重要字段类型变化
 
@@ -122,6 +149,20 @@ get_fundamentals(security, table_name, fields=None, date=None,
 | `turnover_rate` | str | str | str | 无影响 |
 
 
+## 🚨 重要提醒
+
+### 财务接口兼容性问题
+
+1. **字段缺失风险**: 使用国盛证券V016时，`total_assets`、`total_liability`、`total_liability_and_equity`字段将返回空值或报错
+2. **参数兼容性**: 国盛证券仍需使用`date_type`参数，东莞证券已废弃此参数
+3. **接口命名**: 注意逐笔成交接口的拼写差异，避免调用错误
+
+### 建议
+
+- **开发时**: 根据券商版本选择合适的字段和参数
+- **迁移时**: 注意版本间的字段差异，做好兼容性处理
+- **测试时**: 分别在不同券商环境测试财务数据获取功能
+
 ## 🔗 相关文档
 
 - [财务数据API参考](../api-reference/financial-data.md)
@@ -129,4 +170,4 @@ get_fundamentals(security, table_name, fields=None, date=None,
 
 ---
 
-> **说明**: 此对比基于实际API文档分析，具体字段以各版本实际返回为准。
+> **说明**: 此对比基于实际API文档分析，东莞证券V041和国盛证券V016在财务接口上存在显著差异，使用时需注意版本兼容性。
