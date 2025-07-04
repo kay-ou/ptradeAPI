@@ -14,6 +14,10 @@
 ### 策略示例
 - [策略示例](examples.md) - 从基础到高级的完整示例
 
+### 数据资源
+- [API分类](api-classification.md) - 完整的API接口分类
+- [行业概念数据](industry-concept-data.md) - 行业概念分类数据
+
 ### 版本信息
 - [版本对比](version-differences.md) - 三个版本的详细技术差异
 - [功能对比表](versions/version-comparison-table.md) - 功能支持对比

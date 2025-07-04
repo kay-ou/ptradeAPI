@@ -61,6 +61,8 @@ docs/
 ├── getting-started/        # 入门指南
 ├── api-reference/         # API参考文档
 ├── examples.md           # 策略示例
+├── api-classification.md  # API分类
+├── industry-concept-data.md # 行业概念分类数据
 ├── versions/              # 版本信息和对比
 ├── version-differences.md # 版本差异对比
 └── advanced/              # 高级功能
