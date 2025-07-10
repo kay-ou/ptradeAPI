@@ -1,179 +1,132 @@
 # 策略引擎框架
 
+本文档详细介绍了 Ptrade 策略引擎的业务流程框架和核心回调函数，帮助您理解策略的生命周期和事件驱动机制。
+
 ## 业务流程框架
 
-ptrade量化引擎以事件触发为基础，通过初始化事件（initialize）、盘前事件（before_trading_start）、盘中事件（handle_data）、盘后事件（after_trading_end）来完成每个交易日的策略任务。
+Ptrade 量化引擎以**事件驱动**为基础，通过一系列预定义的函数（事件处理器）来构建和执行策略。一个典型的交易日中，策略的生命周期主要由以下几个核心事件构成：
 
-initialize和handle_data是一个允许运行策略的最基础结构，也就是必选项，before_trading_start和after_trading_end是可以按需运行的。
+![业务流程框架](https://github.com/ptrade-dev/ptrade-docs/assets/13328734/9e8d1c7f-8d6e-4b9c-8b9a-0e8d1c7f8d6e)
 
-handle_data仅满足日线和分钟级别的盘中处理，tick级别的盘中处理则需要通过tick_data或者run_interval来实现。
+1.  **`initialize(context)` (初始化)**: 策略启动时执行一次，用于全局设置。
+2.  **`before_trading_start(context, data)` (盘前处理)**: 每个交易日开盘前执行一次。
+3.  **`handle_data(context, data)` (主逻辑)**: 盘中按设定的频率（日或分钟）循环执行。
+4.  **`after_trading_end(context, data)` (盘后处理)**: 每个交易日收盘后执行一次。
 
-ptrade还支持委托主推事件（on_order_response）、交易主推事件（on_trade_response），可以通过委托和成交的信息来处理策略逻辑，是tick级的一个补充。
+此外，平台还支持更灵活的事件处理器：
+-   **`tick_data(context, data)`**: 用于处理 Tick 级别的逻辑。
+-   **`run_daily()` / `run_interval()`**: 定时任务，可按日或自定义秒级间隔执行。
+-   **`on_order_response()` / `on_trade_response()`**: 委托和成交回报的实时推送事件。
 
-除了以上的一些事件以外，ptrade也支持通过定时任务来运行策略逻辑，可以通过run_daily接口实现。
+---
 
-![](https://converturltomd.com/static/images/help/BizFrame.png)
-<!-- Image marked for download -->
+## 核心回调函数
 
-## initialize（必选）
+### `initialize(context)`
 
-```python
-initialize(context)
-```
+-   **说明**: 初始化函数，在策略启动时（回测或交易开始时）调用一次，用于设置策略的全局配置和初始化变量。**此函数为必选函数。**
+-   **可调用接口**:
+    -   **设置函数**: `set_universe`, `set_benchmark`, `set_commission`, `set_slippage`, `set_fixed_slippage`, `set_volume_ratio`, `set_limit_mode`, `set_yesterday_position`, `set_parameters`, `set_future_commission`, `set_margin_rate`
+    -   **定时函数**: `run_daily`, `run_interval`
+    -   **其他**: `get_trading_day`, `get_all_trades_days`, `get_trade_days`, `convert_position_from_csv`, `get_user_name`, `is_trade`, `get_research_path`, `permission_test`, `get_margin_rate`, `create_dir`
+-   **参数**:
+    -   `context`: [Context对象](objects.md#Context)，用于存储和传递策略上下文信息。
+-   **返回**: `None`
 
-### 使用场景
+### `before_trading_start(context, data)`
 
-该函数仅在回测、交易模块可用
+-   **说明**: 在每个交易日开盘前调用一次，用于进行每日的数据准备和初始化工作。
+-   **调用时机**:
+    -   **回测**: 每个回测交易日的 08:30。
+    -   **交易**: 启动时立即执行一次，之后每个交易日 09:10 (默认) 执行。
+-   **注意事项**: 在交易模式下，09:10 前调用实时行情接口可能获取到旧数据。
+-   **参数**:
+    -   `context`: [Context对象](objects.md#Context)。
+    -   `data`: 保留字段，暂无数据。
+-   **返回**: `None`
 
-### 接口说明
+### `handle_data(context, data)`
 
-该函数用于初始化一些全局变量，是策略运行的唯二必须定义函数之一。
+-   **说明**: 策略最核心的函数，根据您设置的频率（日或分钟）被反复调用，用于执行主要的交易逻辑。**此函数为必选函数。**
+-   **调用时机**:
+    -   **日线**: 每天 15:00 (回测) 或 14:50 (交易，可配置) 调用一次。
+    -   **分钟**: 每个分钟 K 线结束后调用一次 (09:31-15:00)。
+-   **参数**:
+    -   `context`: [Context对象](objects.md#Context)。
+    -   `data`: 一个字典，key 为证券代码，value 为该周期的 [SecurityUnitData对象](objects.md#SecurityUnitData)。
+-   **返回**: `None`
 
-注意事项：
+### `after_trading_end(context, data)`
 
-该函数只会在回测和交易启动的时候运行一次
+-   **说明**: 在每个交易日收盘后调用一次，用于执行当日的收盘后任务。
+-   **调用时机**: 每个交易日 15:30 (默认)。
+-   **常用操作**:
+    -   分析当日成交记录。
+    -   保存当日策略状态，为次日做准备。
+    -   生成当日交易报告。
+-   **参数**:
+    -   `context`: [Context对象](objects.md#Context)。
+    -   `data`: 保留字段，暂无数据。
+-   **返回**: `None`
 
-### 可调用接口
+### `tick_data(context, data)`
 
-- [set_universe(回测/交易)](settings.md#set_universe)
-- [set_benchmark(回测/交易)](settings.md#set_benchmark)
-- [set_commission(回测)](settings.md#set_commission)
-- [set_fixed_slippage(回测)](settings.md#set_fixed_slippage)
-- [set_slippage(回测)](settings.md#set_slippage)
-- [set_volume_ratio(回测)](settings.md#set_volume_ratio)
-- [set_limit_mode(回测)](settings.md#set_limit_mode)
-- [set_yesterday_position(回测)](settings.md#set_yesterday_position)
-- [run_daily(回测/交易)](#run_daily)
-- [run_interval(交易)](#run_interval)
-- [get_trading_day(研究/回测/交易)](basic-info.md#get_trading_day)
-- [get_all_trades_days(研究/回测/交易)](basic-info.md#get_all_trades_days)
-- [get_trade_days(交易)](basic-info.md#get_trade_days)
-- [convert_position_from_csv(回测)](utilities.md#convert_position_from_csv)
-- [get_user_name(回测/交易)](utilities.md#get_user_name)
-- [is_trade(回测/交易)](utilities.md#is_trade)
-- [get_research_path(回测/交易)](utilities.md#get_research_path)
-- [permission_test(交易)](utilities.md#permission_test)
-- [set_future_commission(回测(期货))](futures.md#set_future_commission)
-- [set_margin_rate(回测(期货))](futures.md#set_margin_rate)
-- [get_margin_rate(回测(期货))](futures.md#get_margin_rate)
-- [create_dir(回测/交易)](utilities.md#create_dir)
-- [set_parameters(回测/交易)](settings.md#set_parameters)
+-   **说明**: 用于处理 Tick 级别的策略逻辑，每 3 秒执行一次。
+-   **使用场景**: 仅在交易模块可用。
+-   **注意事项**:
+    -   执行时间为 09:30 - 14:59。
+    -   `data` 参数的结构与 `handle_data` 不同，包含更详细的盘口和逐笔数据。
+    -   L2 行情数据需额外开通。
+    -   如果策略逻辑执行时间超过 3 秒，中间的 Tick 数据会被丢弃。
+-   **参数**:
+    -   `context`: [Context对象](objects.md#Context)。
+    -   `data`: 包含 `order`, `tick`, `transaction` 的字典。
+-   **返回**: `None`
 
-### 参数
+### `on_order_response(context, order_list)`
 
-context: [Context对象](objects.md#Context)，存放有当前的账户及持仓信息；
+-   **说明**: 当有委托回报时触发，比轮询 `get_orders()` 更快。
+-   **使用场景**: 仅在交易模块可用。
+-   **注意事项**: 在此函数内下单需小心处理，避免造成无限循环委托。
+-   **参数**:
+    -   `context`: [Context对象](objects.md#Context)。
+    -   `order_list`: 变化的委托单列表，每个元素是一个包含委托信息的字典。
+-   **返回**: `None`
 
-### 返回
+### `on_trade_response(context, trade_list)`
 
-None
+-   **说明**: 当有成交回报时触发，比轮询 `get_trades()` 更快。
+-   **使用场景**: 仅在交易模块可用。
+-   **注意事项**: 同 `on_order_response`，需注意避免循环下单。
+-   **参数**:
+    -   `context`: [Context对象](objects.md#Context)。
+    -   `trade_list`: 变化的成交单列表，每个元素是一个包含成交信息的字典。
+-   **返回**: `None`
 
-### 示例
+---
 
-```python
-def initialize(context):
-    #g为全局对象
-    g.security = '600570.SS'
-    set_universe(g.security)
+## 定时周期性函数
 
-def handle_data(context, data):
-    order('600570.SS',100)
-```
+### `run_daily(context, func, time='9:31')`
 
-## before_trading_start（可选）
+-   **说明**: 注册一个在每个交易日指定时间执行一次的函数。
+-   **注意事项**:
+    -   只能在 `initialize()` 中调用。
+    -   可以注册多个不同的定时任务。
+-   **参数**:
+    -   `context`: [Context对象](objects.md#Context)。
+    -   `func`: 要执行的函数，该函数必须接收 `context` 作为参数。
+    -   `time` (str): "HH:MM" 格式的时间字符串。
 
-```python
-before_trading_start(context, data)
-```
+### `run_interval(context, func, seconds=10)`
 
-### 使用场景
-
-该函数仅在回测、交易模块可用
-
-### 接口说明
-
-该函数在每天开始交易前被调用一次，用于添加每天都要初始化的信息，如无盘前初始化需求，该函数可以在策略中不做定义。
-
-注意事项：
-
-1. 在回测中，该函数在每个回测交易日8:30分执行。
-2. 在交易中，该函数在开启交易时立即执行，从隔日开始每天9:10分(默认)执行。
-3. 当在9:10前开启交易时，受行情未更新原因在该函数内调用实时行情接口会导致数据有误。可通过在该函数内sleep至9:10分或调用实时行情接口改为run_daily执行等方式进行避免。
-
-### 可调用接口
-
-- [set_universe(回测/交易)](settings.md#set_universe)
-- [get_Ashares(研究/回测/交易)](stock-info.md#get_Ashares)
-- [set_yesterday_position(回测)](settings.md#set_yesterday_position)
-- [get_stock_info(研究/回测/交易)](stock-info.md#get_stock_info)
-- [get_index_stocks(研究/回测/交易)](stock-info.md#get_index_stocks)
-- [get_fundamentals(研究/回测/交易)](stock-info.md#get_fundamentals)
-
-### 参数
-
-context: [Context对象](objects.md#Context)，存放有当前的账户及持仓信息；
-
-data：保留字段暂无数据；
-
-### 返回
-
-None
-
-### 示例
-
-```python
-def initialize(context):
-    #g为全局变量
-    g.security = '600570.SS'
-    set_universe(g.security)
-
-def before_trading_start(context, data):
-    log.info(g.security)
-
-def handle_data(context, data):
-    order('600570.SS',100)
-```
-
-## handle_data（必选）
-
-```python
-handle_data(context, data)
-```
-
-### 使用场景
-
-该函数仅在回测、交易模块可用
-
-### 接口说明
-
-该函数在交易时间内按指定的周期频率运行，是用于处理策略交易的主要模块，根据策略保存时的周期参数分为每分钟运行和每天运行，是策略运行的唯二必须定义函数之一。
-
-注意事项：
-
-1. 该函数每个单位周期执行一次
-2. 如果是日线级别策略，每天执行一次。股票回测场景下，在15:00执行；股票交易场景下，执行时间为券商实际配置时间。
-3. 如果是分钟级别策略，每分钟执行一次，股票回测场景下，执行时间为9:31 -- 15:00，股票交易场景下，执行时间为9:30 -- 14:59。
-4. 回测与交易中，handle_data函数不会在非交易日触发（如回测或交易起始日期为2015年12月21日，则策略在2016年1月1日-3日时，handle_data不会运行，4日继续运行）。
-
-### 参数
-
-context: [Context对象](objects.md#Context)，存放有当前的账户及持仓信息；
-
-data：一个字典(dict)，key是标的代码，value是当时的SecurityUnitData对象，存放当前周期（日线策略，则是当天；分钟策略，则是这一分钟）的数据；
-
-注意：为了加速，data中的数据只包含股票池中所订阅标的的信息，可使用data[security]的方式来获取当前周期对应的标的信息；
-
-### 返回
-
-None
-
-### 示例
-
-```python
-def initialize(context):
-    #g为全局变量
-    g.security = '600570.SS'
-    set_universe(g.security)
-
-def handle_data(context, data):
-    order('600570.SS',100)
-```
+-   **说明**: 注册一个按指定秒数间隔循环执行的函数。
+-   **使用场景**: 仅在交易模块可用。
+-   **注意事项**:
+    -   只能在 `initialize()` 中调用。
+    -   最小间隔为 3 秒。
+    -   多个 `run_interval` 会以多线程方式并行运行，需注意逻辑间的同步问题。
+-   **参数**:
+    -   `context`: [Context对象](objects.md#Context)。
+    -   `func`: 要执行的函数，该函数必须接收 `context` 作为参数。
+    -   `seconds` (int): 时间间隔（秒）。

@@ -1,171 +1,119 @@
 # 快速入门
 
-本文档将带您快速上手 Ptrade API，从最简单的策略开始，逐步学习如何编写有效的量化交易策略。
+本文档将引导您完成从创建策略到运行交易的全过程，帮助您快速上手 Ptrade 量化交易平台。
 
-## 简单但是完整的策略
+## 1. 新建策略
 
-先来看一个简单但是完整的策略:
+开始之前，您需要先创建一个策略文件。
+
+1.  在 Ptrade 客户端左侧的策略列表中，右键点击并选择“新建策略”。
+2.  选择一个业务类型（如：股票），并为您的策略命名。
+3.  创建成功后，系统会自动生成一个包含基础模板的策略文件，您可以开始编写代码。
+
+![新建策略](https://github.com/ptrade-dev/ptrade-docs/assets/13328734/8a6b443a-e27c-4b9c-8b9a-9e8d1c7f8d6e)
+
+## 2. 编写您的第一个策略
+
+一个最简单的策略包含 `initialize` 和 `handle_data` 两个函数。
 
 ```python
+# 策略代码：simple_strategy.py
+
 def initialize(context):
+    """
+    初始化函数，在策略启动时运行一次。
+    """
+    # 设置要操作的股票池
     set_universe('600570.SS')
+    log.info("策略初始化完成")
 
 def handle_data(context, data):
+    """
+    策略主逻辑函数，按指定的频率（日或分钟）定时触发。
+    """
+    # 此处暂时不添加任何交易逻辑
     pass
 ```
 
-一个完整策略只需要两步:
+-   **`initialize(context)`**: 初始化函数，用于设置策略的全局参数，如股票池、基准、手续费等。它在策略启动时仅执行一次。
+-   **`handle_data(context, data)`**: 策略的核心逻辑所在，会根据您设置的频率（日或分钟）被反复调用。
 
-1. `set_universe`: 设置我们要操作的股票池，上面的例子中，只操作一支股票: '600570.SS'，恒生电子。所有的操作只能对股票池的标的进行。
-2. 实现一个函数: `handle_data`。
+## 3. 运行回测
 
-这是一个完整的策略，但是我们没有任何交易，下面我们来添加一些交易。
+策略编写完成后，通过回测来检验其在历史数据上的表现。
 
-## 添加一些交易
+1.  在策略编辑界面，点击上方的“回测”按钮。
+2.  设置回测参数：
+    *   **开始/结束时间**: 定义回测的时间范围。
+    *   **初始资金**: 设定回测的初始虚拟资金。
+    *   **回测基准**: 选择一个指数作为策略表现的比较基准（如：沪深300）。
+    *   **回测频率**: 选择 `日` 或 `分钟` 级别。
+3.  点击“保存”并“开始回测”。系统将开始运行，并在完成后展示详细的回测报告，包括收益曲线、年化收益、最大回撤等关键指标。
+
+![回测参数设置](https://github.com/ptrade-dev/ptrade-docs/assets/13328734/0e6b3e3f-4b1e-4b9e-8b0a-0e8d1c7f8d6e)
+
+## 4. 添加交易逻辑
+
+现在，我们为一个简单的双均线策略添加交易逻辑。
 
 ```python
+# 策略代码：dual_moving_average_strategy.py
+
 def initialize(context):
-    g.security = '600570.SS'
-    # 是否创建订单标识
-    g.flag = False
+    g.security = '600570.SS' # 设置股票代码
     set_universe(g.security)
 
 def handle_data(context, data):
-    if not g.flag:
-        order(g.security, 1000)
-        g.flag = True
-```
-
-这个策略里，当我们没有创建订单时就买入1000股'600570.SS'，具体的下单API请看[order](../api-reference/stock-trading.md#order)函数。这里我们有了交易，但是只是无意义的交易，没有依据当前的数据做出合理的分析。
-
-## 实用的策略
-
-下面我们来看一个真正实用的策略
-
-在这个策略里，我们会根据历史价格做出判断:
-
-- 如果上一时间点价格高出五天平均价1%，则全仓买入
-- 如果上一时间点价格低于五天平均价，则空仓卖出
-
-```python
-def initialize(context):
-    g.security = '600570.SS'
-    set_universe(g.security)
+    # 获取过去10天的历史价格
+    hist = get_history(10, '1d', 'close', g.security)
     
-def handle_data(context, data):
-    security = g.security
-    sid = g.security
-    
-    # 取得过去五天的历史价格
-    df = get_history(5, '1d', 'close', security, fq=None, include=False)
-    
-    # 取得过去五天的平均价格
-    average_price = round(df['close'][-5:].mean(), 3)
+    # 计算5日和10日均线
+    ma5 = hist[-5:].mean()
+    ma10 = hist[-10:].mean()
 
-    # 取得上一时间点价格
-    current_price = data[sid]['close']
-    
-    # 取得当前的现金
-    cash = context.portfolio.cash
-    
-    # 如果上一时间点价格高出五天平均价1%, 则全仓买入
-    if current_price > 1.01*average_price:
-        # 用所有 cash 买入股票
+    # 获取当前持仓
+    position = get_position(g.security)
+
+    # 金叉（5日线上穿10日线）且当前无持仓，则买入
+    if ma5 > ma10 and position.amount == 0:
+        # 获取账户可用现金
+        cash = context.portfolio.cash
+        # 全仓买入
         order_value(g.security, cash)
-        log.info('buy %s' % g.security)
-    # 如果上一时间点价格低于五天平均价, 则空仓卖出
-    elif current_price < average_price and get_position(security).amount > 0:
-        # 卖出所有股票,使这只股票的最终持有量为0
+        log.info(f"买入 {g.security}")
+
+    # 死叉（5日线下穿10日线）且当前有持仓，则卖出
+    elif ma5 < ma10 and position.amount > 0:
+        # 全部卖出
         order_target(g.security, 0)
-        log.info('sell %s' % g.security)
+        log.info(f"卖出 {g.security}")
 ```
 
-## 模拟盘和实盘注意事项
+-   **`g` 对象**: 一个全局对象，用于在策略的不同函数间传递和存储变量。
+-   **`get_history()`**: 获取历史行情数据。
+-   **`get_position()`**: 获取指定标的的持仓信息。
+-   **`order_value()` / `order_target()`**: 下单函数，分别用于按价值下单和按目标数量下单。
 
-### 关于持久化
+## 5. 开启模拟/实盘交易
 
-#### 为什么要做持久化处理
+回测结果满意后，您可以将策略用于模拟交易或实盘交易。
 
-服务器异常、策略优化等诸多场景，都会使得正在进行的模拟盘和实盘策略存在中断后再重启的需求，但是一旦交易中止后，策略中存储在内存中的全局变量就清空了，因此通过持久化处理为量化交易保驾护航必不可少。
+1.  在主界面的“交易”模块中，点击“新增”按钮。
+2.  在弹出的窗口中，选择您要运行的策略方案。
+3.  为本次交易命名，然后点击“确定”启动。
 
-#### 量化框架持久化处理
+交易启动后，您可以在交易详情中实时查看策略的运行状态、持仓、资金、日志等信息。
 
-使用pickle模块保存股票池、账户信息、订单信息、全局变量g定义的变量等内容。
+![新建交易](https://github.com/ptrade-dev/ptrade-docs/assets/13328734/8a6b443a-e27c-4b9c-8b9a-9e8d1c7f8d6e)
 
-注意事项：
+## 关键注意事项
 
-1. 框架会在[before_trading_start（隔日开始）](../api-reference/framework.md#before_trading_start)、[handle_data](../api-reference/framework.md#handle_data)、[after_trading_end](../api-reference/framework.md#after_trading_end)事件后触发持久化信息更新及保存操作；
-2. 券商升级/环境重启后恢复交易时，框架会先执行策略[initialize](../api-reference/framework.md#initialize)函数再执行持久化信息恢复操作。如果持久化信息保存有策略定义的全局对象g中的变量，将会以持久化信息中的变量覆盖掉[initialize](../api-reference/framework.md#initialize)函数中初始化的该变量。
-3. 全局变量g中不能被序列化的变量将不会被保存。您可在[initialize](../api-reference/framework.md#initialize)中初始化该变量时名字以'__'开头；
-4. 涉及到IO(打开的文件，实例化的类对象等)的对象是不能被序列化的；
-5. 全局变量g中以'__'开头的变量为私有变量，持久化时将不会被保存；
-
-#### 示例
-
-```python
-class Test(object):
-    count = 5
-
-    def print_info(self):
-        self.count += 1
-        log.info("a" * self.count)
-
-
-def initialize(context):
-    g.security = "600570.SS"
-    set_universe(g.security)
-    # 初始化无法被序列化类对象，并赋值为私有变量，落地持久化信息时跳过保存该变量
-    g.__test_class = Test()
-
-def handle_data(context, data):
-    # 调用私有变量中定义的方法
-    g.__test_class.print_info()
-```
-
-#### 策略中持久化处理方法
-
-使用pickle模块保存 g 对象(全局变量)。
-
-#### 示例
-
-```python
-import pickle
-from collections import defaultdict
-NOTEBOOK_PATH = '/home/fly/notebook/'
-'''
-持仓N日后卖出，仓龄变量每日pickle进行保存，重启策略后可以保证逻辑连贯
-'''
-def initialize(context):
-    #尝试启动pickle文件
-    try:
-        with open(NOTEBOOK_PATH+'hold_days.pkl','rb') as f:
-            g.hold_days = pickle.load(f)
-    #定义空的全局字典变量
-    except:
-        g.hold_days = defaultdict(list)
-    g.security = '600570.SS'
-    set_universe(g.security)
-
-# 仓龄增加一天
-def before_trading_start(context, data):
-    if g.hold_days:
-        g.hold_days[g.security] += 1
-        
-# 每天将存储仓龄的字典对象进行pickle保存
-def handle_data(context, data):
-    if g.security not in list(context.portfolio.positions.keys()) and g.security not in g.hold_days:
-        order(g.security, 100)
-        g.hold_days[g.security] = 1
-    if g.hold_days:
-        if g.hold_days[g.security] > 5:
-            order(g.security, -100)
-            del g.hold_days[g.security]
-    with open(NOTEBOOK_PATH+'hold_days.pkl','wb') as f:
-        pickle.dump(g.hold_days,f,-1)
-```
+-   **持久化**: 模拟和实盘交易中，策略可能会因服务器维护等原因中断。使用 `pickle` 等方式对重要变量（如持仓状态、自定义参数等）进行持久化，是保证策略重启后能继续正常运行的关键。
+-   **异常处理**: 在代码中加入 `try...except` 块来捕获潜在的错误（如网络请求失败、数据格式错误等），可以大大增强策略的稳定性。
+-   **代码精度**: 注意不同品种的价格精度。股票为2位小数，而可转债、ETF等为3位小数。在进行限价委托时，请确保价格精度正确。
 
 ## 下一步
 
-- [策略示例](examples.md) - 查看更多完整的策略示例
-- [API参考](../api-reference/) - 查看详细的API文档
-- [常见问题](../advanced/faq.md) - 解决常见问题
+-   浏览 **[策略示例库](examples.md)** 获取更多灵感。
+-   查阅 **[API 参考](../api-reference/)** 了解每个函数的详细用法。
+-   在 **[常见问题](../advanced/faq.md)** 中寻找答案。

@@ -1,326 +1,112 @@
 # 融资融券API
 
-本文档介绍融资融券交易相关的API函数，包括担保品买卖、融资买入、融券卖出等功能。
+本文档详细介绍了 Ptrade 平台中用于融资融券（两融）业务的API函数，包括担保品交易、融资融券下单以及各类状态查询。
 
-## 担保品交易
+---
 
-### margin_trade - 担保品买卖
+## 交易类函数
 
-```python
-margin_trade(security, amount, limit_price=None, market_type=None)
-```
+### `margin_trade()` - 担保品买卖
 
-#### 使用场景
+-   **接口说明**: 对信用账户中的担保品进行普通买卖操作。
+-   **参数**:
+    -   `security` (str): 股票代码。
+    -   `amount` (int): 交易数量，正数买入，负数卖出。
+    -   `limit_price` (float, optional): 限价。
+    -   `market_type` (int, optional): 市价委托类型。
+-   **返回**: `Order` 对象的 `id` (str) 或 `None`。
 
-该函数仅支持Ptrade客户端可用，仅在两融回测、两融交易模块可用
+### `margincash_open()` - 融资买入
 
-#### 接口说明
+-   **接口说明**: 融资买入指定的标的证券。
+-   **参数**:
+    -   `security` (str): 股票代码。
+    -   `amount` (int): 交易数量（正数）。
+    -   `limit_price` (float, optional): 限价。
+    -   `market_type` (int, optional): 市价委托类型。
+-   **返回**: `Order` 对象的 `id` (str) 或 `None`。
 
-该接口用于担保品买卖。
+### `margincash_close()` - 卖券还款
 
-注意事项：
+-   **接口说明**: 卖出持仓证券，所得资金优先用于归还融资负债。
+-   **参数**:
+    -   `security` (str): 股票代码。
+    -   `amount` (int): 交易数量（正数）。
+    -   `limit_price` (float, optional): 限价。
+-   **返回**: `Order` 对象的 `id` (str) 或 `None`。
 
-1. 限价和市价委托类型都不传时默认取当前最新价进行限价委托，限价和市价委托类型都传入时以limit_price为委托限价进行市价委托。
-2. 当market_type传入且委托上证股票时，limit_price为保护限价字段，必传字段。
+### `margincash_direct_refund()` - 直接还款
 
-#### 参数
+-   **接口说明**: 使用自有资金直接归还融资负债。
+-   **参数**:
+    -   `value` (float): 还款金额。
+-   **返回**: `None`。
 
-security：股票代码(str)；
+### `marginsec_open()` - 融券卖出
 
-amount：交易数量(int)，正数表示买入，负数表示卖出；
+-   **接口说明**: 融券卖出指定的标的证券。
+-   **参数**:
+    -   `security` (str): 股票代码。
+    -   `amount` (int): 交易数量（正数）。
+    -   `limit_price` (float, optional): 限价。
+-   **返回**: `Order` 对象的 `id` (str) 或 `None`。
 
-limit_price：买卖限价/保护限价(float)；
+### `marginsec_close()` - 买券还券
 
-market_type：市价委托类型(int)，上证股票支持参数0、1、2、4，深证股票支持参数0、2、3、4、5；
+-   **接口说明**: 买入证券以归还融券负债。
+-   **参数**:
+    -   `security` (str): 股票代码。
+    -   `amount` (int): 交易数量（正数）。
+    -   `limit_price` (float, optional): 限价。
+-   **返回**: `Order` 对象的 `id` (str) 或 `None`。
 
-市价委托类型说明：
-- 0：对手方最优价格；
-- 1：最优五档即时成交剩余转限价；
-- 2：本方最优价格；
-- 3：即时成交剩余撤销；
-- 4：最优五档即时成交剩余撤销；
-- 5：全额成交或撤单；
+### `marginsec_direct_refund()` - 直接还券
 
-#### 返回
+-   **接口说明**: 使用自有持仓的证券直接归还融券负债。
+-   **参数**:
+    -   `security` (str): 股票代码。
+    -   `amount` (int): 还券数量（正数）。
+-   **返回**: `None`。
 
-[Order对象](objects.md#Order)中的id或者None。如果创建订单成功，则返回Order对象的id，失败则返回None(str)
+---
 
-#### 示例
+## 查询类函数
 
-```python
-def initialize(context):
-    g.security = "600570.SS"
-    set_universe(g.security)
+### `get_margin_assert()` - 信用资产查询
 
-def before_trading_start(context, data):
-    g.flag = False
+-   **接口说明**: 查询信用账户的资产、负债、保证金等总体情况。
+-   **返回**: `dict`，包含 `assure_asset` (担保资产), `total_debit` (负债总额), `enable_bail_balance` (可用保证金) 等字段。
 
-def handle_data(context, data):
-    if not g.flag:
-        # 以系统最新价委托
-        margin_trade(g.security, 100)
-        # 以46块价格下一个限价单
-        margin_trade(g.security, 100, limit_price=46)
+### `get_margin_contract()` - 合约查询
 
-        # 以46保护限价按最优五档即时成交剩余转限价买入100股
-        margin_trade(g.security, 100, limit_price=46, market_type=1)
-        # 按全额成交或撤单买入100股
-        margin_trade("000001.SZ", 100, market_type=5)
-        g.flag = True
-```
+-   **接口说明**: 查询当前所有的融资融券合约详情。
+-   **返回**: `pandas.DataFrame`，包含每笔合约的详细信息，如 `compact_id` (合约编号), `stock_code`, `compact_type` (合约类型), `repaid_balance` (已还金额) 等。
 
-## 融资交易
+### `get_margincash_stocks()` / `get_marginsec_stocks()` - 标的列表查询
 
-### margincash_open - 融资买入
+-   **`get_margincash_stocks()`**: 获取最新的可融资标的列表。
+-   **`get_marginsec_stocks()`**: 获取最新的可融券标的列表。
+-   **返回**: `list[str]`，包含所有标的的代码。
 
-```python
-margincash_open(security, amount, limit_price=None, market_type=None)
-```
+### `get_assure_security_list()` - 担保品列表查询
 
-#### 使用场景
+-   **接口说明**: 获取最新的可作为保证金的担保品证券列表。
+-   **返回**: `list[str]`，包含所有担保品的代码。
 
-该函数仅支持Ptrade客户端可用，仅在两融交易模块可用
+### 可用数量查询
 
-#### 接口说明
+-   **`get_margincash_open_amount(security, price)`**: 查询指定价格下，某证券的最大可融资买入数量。
+-   **`get_margincash_close_amount(security, price)`**: 查询指定价格下，某证券的最大可卖券还款数量。
+-   **`get_marginsec_open_amount(security, price)`**: 查询指定价格下，某证券的最大可融券卖出数量。
+-   **`get_marginsec_close_amount(security, price)`**: 查询指定价格下，某证券的最大可买券还券数量。
+-   **`get_margin_entrans_amount(security)`**: 查询某证券可用于直接还券的数量。
+-   **`get_enslo_security_info()`**: 查询融券头寸的详细信息，如可用数量、保证金比例等。
 
-该接口用于融资买入。
-
-注意事项：
-
-1. 限价和市价委托类型都不传时默认取当前最新价进行限价委托，限价和市价委托类型都传入时以limit_price为委托限价进行市价委托。
-2. 当market_type传入且委托上证股票时，limit_price为保护限价字段，必传字段。
-
-#### 参数
-
-security：股票代码(str)；
-
-amount：交易数量，输入正数(int)；
-
-limit_price：买卖限价(float)；
-
-market_type：市价委托类型(int)，上证股票支持参数0、1、2、4，深证股票支持参数0、2、3、4、5；
-
-#### 返回
-
-[Order对象](objects.md#Order)中的id或者None。如果创建订单成功，则返回Order对象的id，失败则返回None(str)
-
-#### 示例
-
-```python
-def initialize(context):
-    g.security = "600570.SS"
-    set_universe(g.security)
-
-def handle_data(context, data):
-    # 融资买入100股
-    margincash_open(g.security, 100)
-    # 以指定价格融资买入
-    margincash_open(g.security, 100, limit_price=46)
-```
-
-### margincash_close - 卖券还款
-
-```python
-margincash_close(security, amount, limit_price=None)
-```
-
-#### 使用场景
-
-该函数仅支持Ptrade客户端可用，仅在两融交易模块可用
-
-#### 接口说明
-
-该接口用于卖券还款。
-
-#### 参数
-
-security：股票代码(str)；
-
-amount：交易数量，输入正数(int)；
-
-limit_price：买卖限价(float)；
-
-#### 返回
-
-[Order对象](objects.md#Order)中的id或者None。如果创建订单成功，则返回Order对象的id，失败则返回None(str)
-
-#### 示例
-
-```python
-def initialize(context):
-    g.security = '600570.SS'
-    set_universe(g.security)
-
-def handle_data(context, data):
-    # 卖100股还款
-    margincash_close(g.security, 100)
-```
-
-### margincash_direct_refund - 直接还款
-
-```python
-margincash_direct_refund(value)
-```
-
-#### 使用场景
-
-该函数仅支持Ptrade客户端可用，仅在两融交易模块可用
-
-#### 接口说明
-
-该接口用于直接还款。
-
-#### 参数
-
-value：还款金额(float)；
-
-#### 返回
-
-None
-
-#### 示例
-
-```python
-def initialize(context):
-    g.security = '600570.SS'
-    set_universe(g.security)
-
-def handle_data(context, data):
-    # 获取负债总额
-    fin_compact_balance = get_margin_assert().get('fin_compact_balance')
-    # 还款
-    margincash_direct_refund(fin_compact_balance)
-```
-
-## 融券交易
-
-### marginsec_open - 融券卖出
-
-```python
-marginsec_open(security, amount, limit_price=None)
-```
-
-#### 使用场景
-
-该函数仅支持Ptrade客户端可用，仅在两融交易模块可用
-
-#### 接口说明
-
-该接口用于融券卖出。
-
-#### 参数
-
-security：股票代码(str)；
-
-amount：交易数量，输入正数(int)；
-
-limit_price：买卖限价(float)；
-
-#### 返回
-
-[Order对象](objects.md#Order)中的id或者None。如果创建订单成功，则返回Order对象的id，失败则返回None(str)
-
-#### 示例
-
-```python
-def initialize(context):
-    g.security = '600030.SS'
-    set_universe(g.security)
-
-def handle_data(context, data):
-    # 融券卖出100股
-    marginsec_open(g.security, 100)
-```
-
-### marginsec_close - 买券还券
-
-```python
-marginsec_close(security, amount, limit_price=None)
-```
-
-#### 使用场景
-
-该函数仅支持Ptrade客户端可用，仅在两融交易模块可用
-
-#### 接口说明
-
-该接口用于买券还券。
-
-#### 参数
-
-security：股票代码(str)；
-
-amount：交易数量，输入正数(int)；
-
-limit_price：买卖限价(float)；
-
-#### 返回
-
-[Order对象](objects.md#Order)中的id或者None。如果创建订单成功，则返回Order对象的id，失败则返回None(str)
-
-#### 示例
-
-```python
-def initialize(context):
-    g.security = '600030.SS'
-    set_universe(g.security)
-
-def handle_data(context, data):
-    # 买券还券100股
-    marginsec_close(g.security, 100)
-```
-
-## 融资融券策略示例
-
-### 双均线融资融券策略
-
-```python
-def initialize(context):
-    g.security = '600570.SS'
-    set_universe(g.security)
-
-def handle_data(context, data):
-    # 获取历史数据
-    hist = get_history(20, '1d', 'close', g.security)
-    
-    # 计算移动平均线
-    ma5 = hist['close'][-5:].mean()
-    ma10 = hist['close'][-10:].mean()
-    
-    # 获取当前持仓
-    position = get_position(g.security)
-    
-    # 多头信号：5日均线上穿10日均线
-    if ma5 > ma10 and position.amount <= 0:
-        if position.amount < 0:
-            # 先平空头仓位
-            marginsec_close(g.security, abs(position.amount))
-            log.info('平空头仓位')
-        # 融资买入
-        margincash_open(g.security, 1000)
-        log.info('融资买入')
-    
-    # 空头信号：5日均线下穿10日均线
-    elif ma5 < ma10 and position.amount >= 0:
-        if position.amount > 0:
-            # 先平多头仓位
-            margincash_close(g.security, position.amount)
-            log.info('平多头仓位')
-        # 融券卖出
-        marginsec_open(g.security, 1000)
-        log.info('融券卖出')
-```
+---
 
 ## 注意事项
 
-1. **权限要求**: 融资融券交易需要开通相应权限
-2. **保证金要求**: 需要维持足够的保证金比例
-3. **风险控制**: 注意控制杠杆比例，避免强制平仓
-4. **费用成本**: 融资融券有利息和费用成本
-5. **市场限制**: 部分股票可能不支持融资融券交易
-
-## 相关文档
-
-- [股票交易API](stock-trading.md) - 普通股票交易功能
-- [对象说明](objects.md) - Order、Position等对象详解
-- [策略示例](../getting-started/examples.md) - 更多策略示例
+1.  **权限要求**: 所有融资融券相关操作都需要在开通了融资融券权限的账户下进行。
+2.  **保证金**: 交易时需确保账户有足够的保证金，避免因保证金不足导致废单或强制平仓。
+3.  **费用与利息**: 融资融券交易会产生额外的利息和费用，请在策略中充分考虑。
+4.  **标的范围**: 并非所有证券都支持融资融券，请通过 `get_margincash_stocks()` 和 `get_marginsec_stocks()` 查询最新的标的列表。

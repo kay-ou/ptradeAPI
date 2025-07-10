@@ -1,101 +1,102 @@
-# 使用说明
+# Ptrade 使用说明
 
-本文档介绍如何使用 Ptrade API 进行策略开发、回测和交易。
+本文档详细介绍了 Ptrade 平台的策略业务流程、核心函数、运行机制及支持的业务类型，帮助您深入理解并高效使用平台。
 
-## 新建策略
+## 业务流程框架
 
-开始回测和交易前需要先新建策略，点击下图中左上角标识进行策略添加。可以选择不同的业务类型（比如股票），然后给策略设定一个名称，添加成功后可以在默认策略模板基础上进行策略编写。
+Ptrade 量化引擎以**事件驱动**为核心，通过一系列预定义的函数（事件处理器）来构建和执行策略。一个完整的交易日中，策略的生命周期主要由以下几个核心事件构成：
 
-![](https://converturltomd.com/static/images/help/creat_strategy.png)
-<!-- Image marked for download -->
 
-## 新建回测
+1.  **`initialize(context)` (初始化)**: 策略启动时执行一次，用于全局设置。
+2.  **`before_trading_start(context, data)` (盘前处理)**: 每个交易日开盘前执行一次。
+3.  **`handle_data(context, data)` (主逻辑)**: 盘中按设定的频率（日/分钟）循环执行。
+4.  **`after_trading_end(context, data)` (盘后处理)**: 每个交易日收盘后执行一次。
 
-策略添加完成后就可以开始进行回测操作了。回测之前需要对开始时间、结束时间、回测资金、回测基准、回测频率几个要素进行设定，设定完毕后点击保存。然后再点击回测按键，系统就会开始运行回测，回测的评价指标、收益曲线、日志都会在界面中展现。
+此外，平台还支持更灵活的事件处理器：
+-   **`tick_data(context, data)`**: 用于处理 Tick 级别的逻辑。
+-   **`run_daily()` / `run_interval()`**: 定时任务，可按日或自定义秒级间隔执行。
+-   **`on_order_response()` / `on_trade_response()`**: 委托和成交回报的实时推送事件。
 
-![](https://converturltomd.com/static/images/help/backtest_factor.png)
-<!-- Image marked for download -->
+---
 
-## 新建交易
+## 核心函数详解
 
-交易界面点击新增按键进行新增交易操作，策略方案中的对象为所有策略列表中的策略，给本次交易设定名称并点击确定后系统就开始运行交易了。
+### `initialize(context)`
 
-![](https://converturltomd.com/static/images/help/creat_trade.png)
-<!-- Image marked for download -->
+-   **时机**: 策略启动时（回测或交易开始时）调用一次。
+-   **作用**: 设置策略的全局配置和初始化变量。这是唯二的**必选函数**之一。
+-   **常用操作**:
+    -   设置股票池 (`set_universe`)。
+    -   设置基准 (`set_benchmark`)。
+    -   设置手续费和滑点 (`set_commission`, `set_slippage`)。
+    -   初始化全局变量 `g` 中的自定义参数。
+    -   注册定时任务 (`run_daily`, `run_interval`)。
 
-交易开始运行后，可以实时看到总资产和可用资金情况，同时可以在交易列表查询交易状态。
+### `before_trading_start(context, data)`
 
-![](https://converturltomd.com/static/images/help/account_info.png)
-<!-- Image marked for download -->
+-   **时机**: 每个交易日开盘前调用一次（交易模式下默认 9:10，回测模式下 8:30）。
+-   **作用**: 进行每日开盘前的准备工作。
+-   **常用操作**:
+    -   查询当日财务数据、指数成分股等。
+    -   根据最新信息调整当日的交易计划。
+    -   重置每日状态变量。
+-   **注意**: 在交易模式下，9:10 前调用实时行情接口可能获取到旧数据。
 
-交易开始运行后，可以点击交易详情，查看策略评价指标、交易明细、持仓明细、交易日志。
+### `handle_data(context, data)`
 
-![](https://converturltomd.com/static/images/help/trade_info.png)
-<!-- Image marked for download -->
+-   **时机**: 盘中根据策略设置的频率（日或分钟）循环调用。
+-   **作用**: 实现策略最核心的交易逻辑。这是唯二的**必选函数**之一。
+-   **运行频率**:
+    -   **日线**: 每天 15:00 (回测) 或 14:50 (交易，可配置) 调用一次。
+    -   **分钟**: 每个分钟 K 线结束后调用一次。
+-   **常用操作**:
+    -   获取行情数据 (`data` 对象或 `get_history`)。
+    -   进行技术指标计算和逻辑判断。
+    -   执行下单操作 (`order`, `order_target` 等)。
 
-## 策略运行周期
+### `after_trading_end(context, data)`
 
-回测支持日线级别、分钟级别运行，详见[handle_data](../api-reference/framework.md#handle_data)方法。
+-   **时机**: 每个交易日收盘后调用一次（通常为 15:30）。
+-   **作用**: 进行每日收盘后的数据分析、总结和清理工作。
+-   **常用操作**:
+    -   记录当日交易总结。
+    -   进行策略表现分析。
+    -   为第二天的交易准备数据。
 
-交易支持日线级别、分钟级别、tick级别运行，日线级别和分钟级别详见[handle_data](../api-reference/framework.md#handle_data)方法，tick级别运行详见[run_interval](../api-reference/framework.md#run_interval)和[tick_data](../api-reference/framework.md#tick_data)方法。
+---
 
-### 频率：日线级别
+## 策略运行与业务支持
 
-当选择日线频率时，回测和交易都是每天运行一次，运行时间为每天盘后。
+### 策略运行周期与时间
 
-### 频率：分钟级别
+| 频率 | 调用函数 | 回测运行时间 | 交易运行时间 |
+|---|---|---|---|
+| **日线** | `handle_data` | 15:00 | 14:50 (默认) |
+| **分钟** | `handle_data` | 09:31 - 15:00 | 09:30 - 14:59 |
+| **Tick** | `tick_data` / `run_interval` | 不支持 | 09:30 - 14:59 (最小间隔3秒) |
 
-当选择分钟频率时，回测和交易都是每分钟运行一次，运行时间为每根分钟K线结束。
+-   **盘前 (09:30前)**: `before_trading_start` 执行。
+-   **盘中 (09:30-15:00)**: `handle_data`, `tick_data`, `run_interval` 执行。
+-   **盘后 (15:00后)**: `after_trading_end` 执行。
 
-### 频率：tick级别
+### 支持的业务类型
 
-当选择tick频率时，交易最小频率可以达到3秒运行一次。
+| 业务类型 | 回测支持 | 交易支持 | 单位 |
+|---|:---:|:---:|------|
+| 普通股票 | ✅ | ✅ | 股 |
+| 可转债 (T+0) | ✅ | ✅ | 张 |
+| 融资融券 | ✅ | ✅ | 股 |
+| 期货 | ✅ | ✅ | 手 |
+| ETF 基金 | ✅ | ✅ | 份/股 |
+| LOF 基金 | ✅ | ✅ | 股 |
+| ETF 申赎 | ❌ | ✅ | 份 |
+| 国债逆回购 | ❌ | ✅ | 份 |
+| 期权 | ❌ | ✅ | 张 |
 
-## 策略运行时间
-
-### 盘前运行
-
-9:30分钟之前为盘前运行时间，交易环境支持运行在[run_daily](../api-reference/framework.md#run_daily)中指定交易时间(如time='09:15')运行的函数；回测环境和交易环境支持运行[before_trading_start](../api-reference/framework.md#before_trading_start)函数
-
-### 盘中运行
-
-9:31(回测)/9:30(交易)~15:00分钟为盘中运行时间，分钟级别回测环境和交易环境支持运行在[run_daily](../api-reference/framework.md#run_daily)中指定交易时间(如time='14:30')运行的函数；回测环境和交易环境支持运行[handle_data](../api-reference/framework.md#handle_data)函数；交易环境支持运行[run_interval](../api-reference/framework.md#run_interval)函数
-
-### 盘后运行
-
-15:30分钟为盘后运行时间，回测环境和交易环境支持运行[after_trading_end](../api-reference/framework.md#after_trading_end)函数(该函数为定时运行)；15:00之后交易环境支持运行在[run_daily](../api-reference/framework.md#run_daily)中指定交易时间(如time='15:10')运行的函数。
-
-## 交易策略委托下单时间
-
-使用order系列接口进行股票委托下单，将直接报单到柜台。
-
-## 回测支持业务类型
-
-目前所支持的业务类型:
-
-1. 普通股票买卖(单位：股)
-2. 可转债买卖(单位：张，T+0)
-3. 融资融券担保品买卖(单位：股)
-4. 期货投机类型交易(单位：手，T+0)
-5. LOF基金买卖(单位：股)
-6. ETF基金买卖(单位：股)
-
-## 交易支持业务类型
-
-目前所支持的业务类型:
-
-1. 普通股票买卖(单位：股)
-2. 可转债买卖(具体单位请咨询券商，T+0)
-3. 融资融券交易(单位：股)
-4. ETF申赎、套利(单位：份)
-5. 国债逆回购(单位：份)
-6. 期货投机类型交易(单位：手，T+0)
-7. LOF基金买卖(单位：股)
-8. ETF基金买卖(单位：股)
-9. 期权交易(单位：手)
+---
 
 ## 下一步
 
-- [快速入门](quick-start.md) - 学习如何编写第一个策略
-- [策略示例](examples.md) - 查看完整的策略示例
-- [API参考](../api-reference/) - 查看详细的API文档
+-   **[快速入门](quick-start.md)**: 学习如何编写您的第一个策略。
+-   **[API 参考](../api-reference/)**: 查看所有函数的详细说明。
+-   **[策略示例](examples.md)**: 从丰富的示例中寻找灵感。
