@@ -50,36 +50,56 @@ Ptrade是由恒生电子开发的量化交易API平台，被多家券商采用�
 ### 2. 根据您的需求选择入口
 
 #### 🎓 我是新手，想学习
-- [入门指南](docs/getting-started/) - 从零开始学习
-- [策略示例](docs/examples.md) - 看实际代码学习
+- [📖 入门指南](docs/getting-started/) - 从零开始学习Ptrade
+- [💡 策略示例](docs/examples.md) - 看实际代码学习
+- [📚 完整文档导航](docs/) - 文档库总入口
 
 #### 🔍 我要查API接口
-- [API参考文档](docs/api-reference/) - 完整接口说明
-- [API分类索引](docs/api-classification.md) - 按功能查找
+- [📋 API参考文档](docs/api-reference/) - 完整的API接口说明和导航
+- [🔖 API分类索引](docs/api-classification.md) - 按功能分类的接口速查表
+- [📊 行业概念数据](docs/industry-concept-data.md) - 行业分类和概念板块数据
 
 #### ⚖️ 我要对比版本差异
-- [版本差异详细对比](docs/version-differences.md) - 技术差异分析
-- [功能对比表](docs/versions/version-comparison-table.md) - 功能支持对比
-
-#### 📊 我要查数据分类
-- [行业概念数据](docs/industry-concept-data.md) - 行业分类代码
-- [财务数据对比](docs/versions/financial-data-comparison.md) - 财务数据差异
+- [🔍 版本差异对比](docs/version-differences.md) - 主要技术差异分析
+- [📊 版本详细信息](docs/versions/) - 完整的版本功能对比和选择指南
+- [📄 原始文档](docs/original/) - 三个版本的完整原始API文档
 
 #### ❓ 我遇到了问题
-- [常见问题解答](docs/advanced/faq.md) - 问题排查指南
+- [🔧 高级功能和FAQ](docs/advanced/) - 常见问题、支持库、版本变更等
+- [❓ 常见问题解答](docs/advanced/faq.md) - 详细的问题排查指南
 
 ## 📁 文档结构
 
 ```
 docs/
-├── getting-started/        # 入门指南
-├── api-reference/         # API参考文档
-├── examples.md           # 策略示例
-├── api-classification.md  # API分类
-├── industry-concept-data.md # 行业概念分类数据
-├── versions/              # 版本信息和对比
-├── version-differences.md # 版本差异对比
-└── advanced/              # 高级功能
+├── README.md              # 📚 文档库总入口
+├── getting-started/       # 🎓 入门指南
+│   ├── README.md          # 入门导航
+│   ├── quick-start.md     # 快速开始
+│   └── ...               # 其他入门文档
+├── api-reference/         # 📋 API参考文档
+│   ├── README.md          # API文档主页和导航
+│   ├── stock-trading.md   # 股票交易接口
+│   ├── market-data.md     # 市场数据接口
+│   ├── technical-indicators.md # 技术指标接口
+│   └── ...               # 其他API模块文档
+├── examples.md           # 💡 策略示例库
+├── api-classification.md  # 🔖 API分类索引
+├── industry-concept-data.md # 📊 行业概念分类数据
+├── versions/              # ⚖️ 版本信息和对比
+│   ├── README.md          # 版本选择指南
+│   ├── version-comparison-table.md # 功能对比表
+│   └── ...               # 其他版本文档
+├── version-differences.md # 🔍 版本差异对比
+├── original/              # 📄 原始文档
+│   ├── README.md          # 原始文档导航
+│   ├── Ptrade社区.md      # 社区版本原始文档
+│   ├── Ptrade国盛.md      # 国盛版本原始文档
+│   └── ...               # 其他原始文档
+└── advanced/              # 🔧 高级功能
+    ├── README.md          # 高级功能导航
+    ├── faq.md            # 常见问题解答
+    └── ...               # 其他高级文档
 ```
 
 ## 🔍 主要发现
@@ -150,6 +170,6 @@ if order.status == '8':
 
 ---
 
-> **最后更新**: 2024年
+> **最后更新**: 2024年12月
 > **维护状态**: 活跃维护中
 > **文档版本**: 基于三个主要版本的实际API文档整理

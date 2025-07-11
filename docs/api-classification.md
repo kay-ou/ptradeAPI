@@ -1,5 +1,7 @@
 # API 接口分类汇总
 
+> 📖 **导航**: [文档库主页](README.md) | [API参考](api-reference/) | [策略示例](examples.md) | [入门指南](getting-started/)
+
 本文档将 Ptrade 的所有 API 接口按功能进行分类，方便您快速查找和使用。
 
 ---
@@ -108,9 +110,9 @@
 ## 4. 融资融券、期货、期权函数
 
 请参考各自的专题文档：
--   **[融资融券API](margin-trading.md)**
--   **[期货交易API](futures.md)**
--   **[期权交易API](options.md)**
+-   **[融资融券API](api-reference/margin-trading.md)**
+-   **[期货交易API](api-reference/futures.md)**
+-   **[期权交易API](api-reference/options.md)**
 
 ---
 
@@ -128,3 +130,14 @@
 | `get_research_path()` | 获取研究环境根目录路径。 |
 | `get_user_name()` | 获取当前资金账号。 |
 | `get_trade_name()` | **[交易]** 获取当前交易实例名称。 |
+
+---
+
+## 📚 相关文档
+
+- [**API详细参考**](api-reference/) - 查看每个接口的详细说明和参数
+- [**策略示例**](examples.md) - 查看API接口的实际使用示例
+- [**入门指南**](getting-started/) - 学习如何使用这些API接口
+- [**版本差异**](version-differences.md) - 了解不同版本中API的差异
+
+> 🔙 **返回**: [文档库主页](README.md) | [API参考文档](api-reference/)
