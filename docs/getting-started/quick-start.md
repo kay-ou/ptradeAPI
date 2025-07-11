@@ -10,8 +10,6 @@
 2.  选择一个业务类型（如：股票），并为您的策略命名。
 3.  创建成功后，系统会自动生成一个包含基础模板的策略文件，您可以开始编写代码。
 
-![新建策略](https://github.com/ptrade-dev/ptrade-docs/assets/13328734/8a6b443a-e27c-4b9c-8b9a-9e8d1c7f8d6e)
-
 ## 2. 编写您的第一个策略
 
 一个最简单的策略包含 `initialize` 和 `handle_data` 两个函数。
@@ -49,8 +47,6 @@ def handle_data(context, data):
     *   **回测基准**: 选择一个指数作为策略表现的比较基准（如：沪深300）。
     *   **回测频率**: 选择 `日` 或 `分钟` 级别。
 3.  点击“保存”并“开始回测”。系统将开始运行，并在完成后展示详细的回测报告，包括收益曲线、年化收益、最大回撤等关键指标。
-
-![回测参数设置](https://github.com/ptrade-dev/ptrade-docs/assets/13328734/0e6b3e3f-4b1e-4b9e-8b0a-0e8d1c7f8d6e)
 
 ## 4. 添加交易逻辑
 
@@ -103,8 +99,6 @@ def handle_data(context, data):
 3.  为本次交易命名，然后点击“确定”启动。
 
 交易启动后，您可以在交易详情中实时查看策略的运行状态、持仓、资金、日志等信息。
-
-![新建交易](https://github.com/ptrade-dev/ptrade-docs/assets/13328734/8a6b443a-e27c-4b9c-8b9a-9e8d1c7f8d6e)
 
 ## 关键注意事项
 
