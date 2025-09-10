@@ -1,8 +1,6 @@
 # Ptrade API 文档项目
 
-> **Ptrade量化交易API的完整文档库** - 基于三个主要版本的详细对比分析和使用指南
-
-> **用这个邀请码注册我得50你得100美金Claude Code额度：https://anyrouter.top/register?aff=5UV9**
+**Ptrade量化交易API的完整文档库** - 基于三个主要版本的详细对比分析和使用指南
 
 ## 🎯 项目简介
 
