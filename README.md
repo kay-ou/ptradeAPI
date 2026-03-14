@@ -1,188 +1,188 @@
-# Ptrade API 文档项目
+# Ptrade API Documentation Project
 
-**Ptrade量化交易API的完整文档库** - 基于三个主要版本的详细对比分析和使用指南
+**Complete documentation library for Ptrade quantitative trading API** - Detailed comparative analysis and usage guide based on three main versions
 
-> **推荐使用 SimTradeDesk** - 为 Ptrade 策略开发者打造的专业桌面环境，提供 Ptrade 兼容的 API、策略编辑器、回测系统、参数优化器等功能，无需 Python 环境配置，下载安装即可使用。详情请访问 **[SimTradeDesk](http://github.com/kay-ou/SimTradeDesk)**。
+> **Recommended: SimTradeDesk** - A professional desktop environment designed for Ptrade strategy developers, providing Ptrade-compatible APIs, strategy editor, backtesting system, parameter optimizer, and more. No Python environment setup required - just download, install, and start using. For details, visit **[SimTradeDesk](http://github.com/kay-ou/SimTradeDesk)**.
 
-> 另外如需了解与 Ptrade 接口相关的官方接入说明与流程，请私信，我会提供“仅含官方信息来源”的参考路径。
-> Ptrade开发者圈QQ群590529320
+> For official access instructions and processes related to Ptrade interfaces, please send a private message, and I will provide a reference path "containing only official information sources".
+> Ptrade Developer QQ Group: 590529320
 
-## 📑 语言版本
+## 📑 Language Versions
 
-- [中文 (Chinese)](README.md) - 本页面
-- [English](README_EN.md) - 英文版本
+- [English](README.md) - This page
+- [中文 (Chinese)](README_CN.md) - Chinese version
 
-## 🌐 API 文档语言版本
+## 🌐 API Documentation Language Versions
 
-- [中文 API 文档](docs/api-reference/README.md)
+- [Chinese API Documentation](docs/api-reference/README.md)
 - [English API Documentation](docs/api-reference-en/README.md)
 
-## 🎯 项目简介
+## 🎯 Project Introduction
 
-Ptrade是由恒生电子开发的量化交易API平台，被多家券商采用并进行定制化部署。本项目整理了三个主要版本的完整文档，包括：
+Ptrade is a quantitative trading API platform developed by Hundsun Electronics, adopted and customized by multiple securities firms. This project organizes complete documentation for three main versions, including:
 
-- **东莞证券版本** (PBOXQT1.0V202202.01.041) - 最新功能版本
-- **国盛证券版本** (PBOXQT1.0V202202.01.016) - 稳定标准版本
-- **社区维护版本** (PBOXQT1.0V202202.00.005) - 社区增强版本
+- **Dongguan Securities version** (PBOXQT1.0V202202.01.041) - Latest feature version
+- **Guosheng Securities version** (PBOXQT1.0V202202.01.016) - Stable standard version
+- **Community-maintained version** (PBOXQT1.0V202202.00.005) - Community-enhanced version
 
-## ✨ 项目特色
+## ✨ Project Features
 
-### 📊 基于实际API文档的版本对比
-- 通过对比三个版本的真实API文档发现技术差异
-- 详细分析函数调用和返回值的具体差异
-- 提供升级指南和兼容性建议
+### 📊 Version Comparison Based on Actual API Documentation
+- Discover technical differences by comparing real API documentation of three versions
+- Detailed analysis of specific differences in function calls and return values
+- Provide upgrade guides and compatibility recommendations
 
-### 🔍 完整的功能分类和索引
-- 按功能分类整理所有API接口
-- 清晰标注各版本的支持情况
-- 提供完整的策略示例库
+### 🔍 Complete Function Classification and Index
+- Organize all API interfaces by function category
+- Clearly mark support status for each version
+- Provide a complete strategy example library
 
-### 💡 实用的最佳实践
-- 基于官方QA文档的最佳实践
-- 性能优化和稳定性建议
-- 错误处理和调试技巧
+### 💡 Practical Best Practices
+- Best practices based on official QA documentation
+- Performance optimization and stability suggestions
+- Error handling and debugging techniques
 
-### 📚 丰富的学习资源
-- 从基础到高级的完整策略示例
-- 详细的财务数据API文档
-- 有用链接和学习资源汇总
+### 📚 Rich Learning Resources
+- Complete strategy examples from basic to advanced
+- Detailed financial data API documentation
+- Useful links and learning resource summaries
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 1. 选择您的版本
-根据您使用的券商环境选择对应版本：
+### 1. Choose Your Version
+Select the corresponding version based on your brokerage environment:
 
-| 券商 | 版本号 | 特点 | 推荐用途 |
-|------|--------|------|----------|
-| **东莞证券** | V041 | 最新功能，完整支持 | 专业交易，需要最新特性 |
-| **国盛证券** | V016 | 稳定可靠，标准功能 | 生产环境，追求稳定性 |
-| **社区维护** | V005 | 学习友好，示例丰富 | 学习研究，功能探索 |
+| Brokerage | Version | Features | Recommended Use |
+|-----------|---------|----------|----------------|
+| **Dongguan Securities** | V041 | Latest features, full support | Professional trading, requires latest features |
+| **Guosheng Securities** | V016 | Stable and reliable, standard features | Production environment, pursuing stability |
+| **Community-maintained** | V005 | Learning-friendly, rich examples | Learning research, feature exploration |
 
-👉 **不确定选哪个？** 查看 [版本选择指南](docs/getting-started/README.md) 或 [详细版本对比](docs/versions/version-comparison-table.md)
+👉 **Unsure which to choose?** Check the [Version Selection Guide](docs/getting-started/README.md) or [Detailed Version Comparison](docs/versions/version-comparison-table.md)
 
-### 2. 根据您的需求选择入口
+### 2. Choose Your Entry Point Based on Your Needs
 
-#### 🎓 我是新手，想学习
-- [📖 入门指南](docs/getting-started/) - 从零开始学习Ptrade
-- [💡 策略示例](docs/examples.md) - 看实际代码学习
-- [📚 完整文档导航](docs/) - 文档库总入口
+#### 🎓 I'm a beginner, want to learn
+- [📖 Getting Started Guide](docs/getting-started/) - Learn Ptrade from scratch
+- [💡 Strategy Examples](docs/examples.md) - Learn from actual code
+- [📚 Complete Documentation Navigation](docs/) - Documentation library main entry
 
-#### 🔍 我要查API接口
-- [📋 API参考文档](docs/api-reference/) - 完整的API接口说明和导航
-- [🔖 API分类索引](docs/api-classification.md) - 按功能分类的接口速查表
-- [📊 行业概念数据](docs/industry-concept-data.md) - 行业分类和概念板块数据
+#### 🔍 I need to check API interfaces
+- [📋 API Reference Documentation](docs/api-reference/) - Complete API interface descriptions and navigation
+- [🔖 API Classification Index](docs/api-classification.md) - Function-based interface quick reference
+- [📊 Industry Concept Data](docs/industry-concept-data.md) - Industry classification and concept sector data
 
-#### ⚖️ 我要对比版本差异
-- [🔍 版本差异对比](docs/version-differences.md) - 主要技术差异分析
-- [📊 版本详细信息](docs/versions/) - 完整的版本功能对比和选择指南
-- [📄 原始文档](docs/original/) - 三个版本的完整原始API文档
+#### ⚖️ I need to compare version differences
+- [🔍 Version Difference Comparison](docs/version-differences.md) - Main technical difference analysis
+- [📊 Version Details](docs/versions/) - Complete version feature comparison and selection guide
+- [📄 Original Documentation](docs/original/) - Complete original API documentation for all three versions
 
-#### ❓ 我遇到了问题
-- [🔧 高级功能和FAQ](docs/advanced/) - 常见问题、支持库、版本变更等
-- [❓ 常见问题解答](docs/advanced/faq.md) - 详细的问题排查指南
+#### ❓ I encountered a problem
+- [🔧 Advanced Features and FAQ](docs/advanced/) - Common questions, support libraries, version changes, etc.
+- [❓ Frequently Asked Questions](docs/advanced/faq.md) - Detailed problem troubleshooting guide
 
-## 📁 文档结构
+## 📁 Documentation Structure
 
 ```
 docs/
-├── README.md              # 📚 文档库总入口
-├── getting-started/       # 🎓 入门指南
-│   ├── README.md          # 入门导航
-│   ├── quick-start.md     # 快速开始
-│   └── ...               # 其他入门文档
-├── api-reference/         # 📋 API参考文档
-│   ├── README.md          # API文档主页和导航
-│   ├── stock-trading.md   # 股票交易接口
-│   ├── market-data.md     # 市场数据接口
-│   ├── technical-indicators.md # 技术指标接口
-│   └── ...               # 其他API模块文档
-├── examples.md           # 💡 策略示例库
-├── api-classification.md  # 🔖 API分类索引
-├── industry-concept-data.md # 📊 行业概念分类数据
-├── versions/              # ⚖️ 版本信息和对比
-│   ├── README.md          # 版本选择指南
-│   ├── version-comparison-table.md # 功能对比表
-│   └── ...               # 其他版本文档
-├── version-differences.md # 🔍 版本差异对比
-├── original/              # 📄 原始文档
-│   ├── README.md          # 原始文档导航
-│   ├── Ptrade社区.md      # 社区版本原始文档
-│   ├── Ptrade国盛.md      # 国盛版本原始文档
-│   └── ...               # 其他原始文档
-└── advanced/              # 🔧 高级功能
-    ├── README.md          # 高级功能导航
-    ├── faq.md            # 常见问题解答
-    └── ...               # 其他高级文档
+├── README.md              # 📚 Documentation library main entry
+├── getting-started/       # 🎓 Getting started guide
+│   ├── README.md          # Getting started navigation
+│   ├── quick-start.md     # Quick start
+│   └── ...               # Other getting started documents
+├── api-reference/         # 📋 API reference documentation
+│   ├── README.md          # API documentation homepage and navigation
+│   ├── stock-trading.md   # Stock trading interfaces
+│   ├── market-data.md     # Market data interfaces
+│   ├── technical-indicators.md # Technical indicator interfaces
+│   └── ...               # Other API module documentation
+├── examples.md           # 💡 Strategy example library
+├── api-classification.md  # 🔖 API classification index
+├── industry-concept-data.md # 📊 Industry concept classification data
+├── versions/              # ⚖️ Version information and comparison
+│   ├── README.md          # Version selection guide
+│   ├── version-comparison-table.md # Feature comparison table
+│   └── ...               # Other version documents
+├── version-differences.md # 🔍 Version difference comparison
+├── original/              # 📄 Original documentation
+│   ├── README.md          # Original documentation navigation
+│   ├── Ptrade社区.md      # Community version original documentation
+│   ├── Ptrade国盛.md      # Guosheng version original documentation
+│   └── ...               # Other original documents
+└── advanced/              # 🔧 Advanced features
+    ├── README.md          # Advanced features navigation
+    ├── faq.md            # Frequently asked questions
+    └── ...               # Other advanced documents
 ```
 
-## 🔍 主要发现
+## 🔍 Key Findings
 
-### 关键技术差异
-通过对比三个版本的实际API文档，我们发现了以下重要差异：
+### Critical Technical Differences
+By comparing the actual API documentation of the three versions, we found the following important differences:
 
-#### 1. 委托状态字段类型变化 ⚠️ (最重要)
+#### 1. Order Status Field Type Change ⚠️ (Most Important)
 ```python
-# V005: int类型
+# V005: int type
 if order.status == 8:
 
-# V016/V041: str类型
+# V016/V041: str type
 if order.status == '8':
 ```
 
-#### 2. 版本独有功能
-- **V005独有**: 企业微信推送、资金调拨、邮件设置
-- **V016缺少**: 企业微信、可转债专门接口、融券信息查询
-- **V041最全**: 包含所有新功能和最新字段更新
+#### 2. Version-Exclusive Features
+- **V005 exclusive**: WeChat Work push, fund transfer, email settings
+- **V016 missing**: WeChat Work, convertible bond dedicated interfaces, margin trading information query
+- **V041 most complete**: Includes all new features and latest field updates
 
-#### 3. 技术指标支持
-- **V005**: 需手动计算MACD等指标
-- **V016/V041**: 内置`get_MACD()`, `get_KDJ()`, `get_RSI()`, `get_CCI()`
+#### 3. Technical Indicator Support
+- **V005**: Need to manually calculate MACD and other indicators
+- **V016/V041**: Built-in `get_MACD()`, `get_KDJ()`, `get_RSI()`, `get_CCI()`
 
-## 📖 使用指南
+## 📖 Usage Guide
 
-### 🎯 按角色导航
+### 🎯 Navigation by Role
 
-#### 新手用户
-1. **了解基础** → [入门指南](docs/getting-started/)
-2. **看代码学习** → [策略示例](docs/examples.md)
-3. **查找接口** → [API参考](docs/api-reference/)
+#### New Users
+1. **Understand the basics** → [Getting Started Guide](docs/getting-started/)
+2. **Learn from code** → [Strategy Examples](docs/examples.md)
+3. **Find interfaces** → [API Reference](docs/api-reference/)
 
-#### 开发者
-1. **查看完整API** → [API参考文档](docs/api-reference/)
-2. **学习最佳实践** → [策略示例](docs/examples.md)
-3. **处理版本兼容** → [版本差异对比](docs/version-differences.md)
+#### Developers
+1. **View complete API** → [API Reference Documentation](docs/api-reference/)
+2. **Learn best practices** → [Strategy Examples](docs/examples.md)
+3. **Handle version compatibility** → [Version Difference Comparison](docs/version-differences.md)
 
-#### 运维人员
-1. **了解平台限制** → [版本差异说明](docs/version-differences.md)
-2. **解决常见问题** → [FAQ问答](docs/advanced/faq.md)
-3. **查看支持库** → [高级功能](docs/advanced/)
+#### Operations Personnel
+1. **Understand platform limitations** → [Version Difference Explanation](docs/version-differences.md)
+2. **Solve common problems** → [FAQ](docs/advanced/faq.md)
+3. **View support libraries** → [Advanced Features](docs/advanced/)
 
-## 📚 学习资源
+## 📚 Learning Resources
 
-- [策略示例库](docs/examples.md) - 从基础到高级的完整示例
-- [高级功能](docs/advanced/) - 常见问题、支持库、版本变动
+- [Strategy Example Library](docs/examples.md) - Complete examples from basic to advanced
+- [Advanced Features](docs/advanced/) - Common questions, support libraries, version changes
 
-## 🤝 贡献指南
+## 🤝 Contribution Guide
 
-本项目基于公开的API文档整理，欢迎贡献：
+This project is based on publicly available API documentation collation. Contributions are welcome:
 
-1. **发现错误**: 提交Issue报告文档错误
-2. **补充内容**: 提交PR添加新的策略示例或最佳实践
-3. **版本更新**: 帮助更新新版本的API差异
+1. **Report errors**: Submit an Issue to report documentation errors
+2. **Add content**: Submit a PR to add new strategy examples or best practices
+3. **Version updates**: Help update API differences for new versions
 
-## ⚠️ 免责声明
+## ⚠️ Disclaimer
 
-- 本项目仅用于学习和研究目的
-- 所有策略示例仅供参考，实盘交易请充分测试
-- 具体API功能以各券商实际部署为准
-- 投资有风险，交易需谨慎
+- This project is for learning and research purposes only
+- All strategy examples are for reference only, please fully test before live trading
+- Specific API functions are subject to actual deployment by each brokerage
+- Investment involves risks, trading requires caution
 
-## 📄 许可证
+## 📄 License
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
+This project uses the MIT License - see the [LICENSE](LICENSE) file for details
 
 ---
 
-> **最后更新**: 2024年12月
-> **维护状态**: 活跃维护中
-> **文档版本**: 基于三个主要版本的实际API文档整理
+> **Last updated**: December 2024
+> **Maintenance status**: Actively maintained
+> **Documentation version**: Based on actual API documentation collation of three main versions
