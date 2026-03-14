@@ -105,8 +105,8 @@ These functions are the most basic ways to execute buy/sell operations.
 
 ### Position Query
 
--   **`get_position(security)`**: Get [Position object](objects.md#Position) for a single security.
--   **`get_positions()`**: Get dictionary of [Position objects](objects.md#Position) for all positions.
+-   **`get_position(security)`**: Get [Position object](objects.md#position) for a single security.
+-   **`get_positions()`**: Get dictionary of [Position objects](objects.md#position) for all positions.
 
 ### Order Query
 
