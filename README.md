@@ -2,10 +2,20 @@
 
 **Ptrade量化交易API的完整文档库** - 基于三个主要版本的详细对比分析和使用指南
 
-> 如果你希望在本地环境中进行策略验证或原型开发，可以参考我的另一个开源项目 **[SimTradeLab](http://github.com/kay-ou/SimTradeLab)**。它模拟了 PTrade 的事件驱动机制和接口风格，具备独立实现与扩展能力，适合教学、研究及快速迭代测试使用，本地回测**速度相比ptrade提高20-30+倍**！ 
+> **推荐使用 SimTradeDesk** - 为 Ptrade 策略开发者打造的专业桌面环境，提供 Ptrade 兼容的 API、策略编辑器、回测系统、参数优化器等功能，无需 Python 环境配置，下载安装即可使用。详情请访问 **[SimTradeDesk](http://github.com/kay-ou/SimTradeDesk)**。
 
 > 另外如需了解与 Ptrade 接口相关的官方接入说明与流程，请私信，我会提供“仅含官方信息来源”的参考路径。
 > Ptrade开发者圈QQ群590529320
+
+## 📑 语言版本
+
+- [中文 (Chinese)](README.md) - 本页面
+- [English](README_EN.md) - 英文版本
+
+## 🌐 API 文档语言版本
+
+- [中文 API 文档](docs/api-reference/README.md)
+- [English API Documentation](docs/api-reference-en/README.md)
 
 ## 🎯 项目简介
 
