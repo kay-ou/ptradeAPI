@@ -1,16 +1,15 @@
 # Ptrade API Documentation Project
 
+**[English](README.md)** | **[中文](README_CN.md)**
+
+---
+
 **Complete documentation library for Ptrade quantitative trading API** - Detailed comparative analysis and usage guide based on three main versions
 
 > **Recommended: SimTradeDesk** - A professional desktop environment designed for Ptrade strategy developers, providing Ptrade-compatible APIs, strategy editor, backtesting system, parameter optimizer, and more. No Python environment setup required - just download, install, and start using. For details, visit **[SimTradeDesk](http://github.com/kay-ou/SimTradeDesk)**.
 
 > For official access instructions and processes related to Ptrade interfaces, please send a private message, and I will provide a reference path "containing only official information sources".
 > Ptrade Developer QQ Group: 590529320
-
-## 📑 Language Versions
-
-- [English](README.md) - This page
-- [中文 (Chinese)](README_CN.md) - Chinese version
 
 ## 🌐 API Documentation Language Versions
 

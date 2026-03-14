@@ -1,16 +1,15 @@
 # Ptrade API 文档项目
 
+**[中文](README_CN.md)** | **[English](README.md)**
+
+---
+
 **Ptrade量化交易API的完整文档库** - 基于三个主要版本的详细对比分析和使用指南
 
 > **推荐使用 SimTradeDesk** - 为 Ptrade 策略开发者打造的专业桌面环境，提供 Ptrade 兼容的 API、策略编辑器、回测系统、参数优化器等功能，无需 Python 环境配置，下载安装即可使用。详情请访问 **[SimTradeDesk](http://github.com/kay-ou/SimTradeDesk)**。
 
-> 另外如需了解与 Ptrade 接口相关的官方接入说明与流程，请私信，我会提供“仅含官方信息来源”的参考路径。
+> 另外如需了解与 Ptrade 接口相关的官方接入说明与流程，请私信，我会提供"仅含官方信息来源"的参考路径。
 > Ptrade开发者圈QQ群590529320
-
-## 📑 语言版本
-
-- [中文 (Chinese)](README_CN.md) - 本页面
-- [English](README.md) - 英文版本
 
 ## 🌐 API 文档语言版本
 
